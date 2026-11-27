@@ -155,7 +155,29 @@
         padding: 1.5px 1px !important;
         border: 0.75pt solid #000000 !important;
         line-height: 1.15 !important;
-        word-wrap: break-word;
+        overflow: hidden !important;
+      }
+
+      .official-sheet th.col-seq,
+      .official-sheet td.col-seq {
+        width: 18px !important;
+      }
+
+      .official-sheet th.col-name,
+      .official-sheet td.col-name {
+        width: 122px !important;
+        max-width: 122px !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        text-align: right !important;
+        padding-right: 3px !important;
+        padding-left: 2px !important;
+      }
+
+      .official-sheet.dense-sheet th.col-name,
+      .official-sheet.dense-sheet td.col-name {
+        width: 96px !important;
+        max-width: 96px !important;
       }
 
       .official-sheet th.week-sep,
@@ -1158,6 +1180,12 @@
         date: getWeekSaturdayDate(s.studyStartDate, w)
       }));
 
+      // حساب ارتفاع الصف المناسب ليمتلئ كامل ارتفاع ورقة A4 بدون فراغ كبير بالأسفل
+      const availableBodyPx = 835;
+      const count = Math.max(1, classStudents.length);
+      const computedRowHeight = Math.max(24, Math.min(54, Math.floor(availableBodyPx / count)));
+      const nameColWidth = includeTermAvgAndExams ? '96px' : '125px';
+
       const tableRowsHTML = classStudents.map((student, idx) => {
         const summary = includeTermAvgAndExams ? calculateStudentTermSummary(student.id) : null;
         const exams = appData.monthlyExams[student.id] || { oct: null, nov: null };
@@ -1171,29 +1199,29 @@
           const bTok = parseGradeToken(rec.behavior);
           const hasAny = qTok.type !== 'empty' || hTok.type !== 'empty' || bTok.type !== 'empty';
           const sum = hasAny ? Number((qTok.num + hTok.num + bTok.num).toFixed(2)) : '-';
-          const sepClass = wIdx > 0 ? 'style="border-right:2px solid #000;"' : '';
+          const sepStyle = wIdx > 0 ? 'border-right:2px solid #000;' : '';
           return `
-            <td ${sepClass}>${qTok.display}</td>
-            <td>${hTok.display}</td>
-            <td>${bTok.display}</td>
-            <td style="font-weight:900;background:#f1f5f9;">${sum}</td>
+            <td style="${sepStyle}padding:1px 0;text-align:center;">${qTok.display}</td>
+            <td style="padding:1px 0;text-align:center;">${hTok.display}</td>
+            <td style="padding:1px 0;text-align:center;">${bTok.display}</td>
+            <td style="font-weight:900;background:#f1f5f9;padding:1px 0;text-align:center;">${sum}</td>
           `;
         }).join('');
 
         const extraCells = includeTermAvgAndExams && summary ? `
-          <td style="border-right:2.5px solid #000;font-weight:800;background:#ecfdf5;">${summary.quizCount > 0 ? summary.quizAvg : '-'}</td>
-          <td style="font-weight:800;background:#ecfdf5;">${summary.hwCount > 0 ? summary.hwAvg : '-'}</td>
-          <td style="font-weight:800;background:#ecfdf5;">${summary.behCount > 0 ? summary.behAvg : '-'}</td>
-          <td style="font-weight:900;background:#a7f3d0;">${summary.hasAnyGrade ? summary.totalFinal : '-'}</td>
-          <td style="border-right:2.5px solid #000;font-weight:800;background:#fffbeb;">${octVal}</td>
-          <td style="font-weight:800;background:#fffbeb;">${novVal}</td>
-          <td style="font-weight:900;background:#fde68a;">${summary.hasAnyExam ? summary.examsTotal : '-'}</td>
+          <td style="border-right:2.5px solid #000;font-weight:800;background:#ecfdf5;padding:1px 0;">${summary.quizCount > 0 ? summary.quizAvg : '-'}</td>
+          <td style="font-weight:800;background:#ecfdf5;padding:1px 0;">${summary.hwCount > 0 ? summary.hwAvg : '-'}</td>
+          <td style="font-weight:800;background:#ecfdf5;padding:1px 0;">${summary.behCount > 0 ? summary.behAvg : '-'}</td>
+          <td style="font-weight:900;background:#a7f3d0;padding:1px 0;">${summary.hasAnyGrade ? summary.totalFinal : '-'}</td>
+          <td style="border-right:2.5px solid #000;font-weight:800;background:#fffbeb;padding:1px 0;">${octVal}</td>
+          <td style="font-weight:800;background:#fffbeb;padding:1px 0;">${novVal}</td>
+          <td style="font-weight:900;background:#fde68a;padding:1px 0;">${summary.hasAnyExam ? summary.examsTotal : '-'}</td>
         ` : '';
 
         return `
-          <tr>
-            <td style="font-weight:800;">${idx + 1}</td>
-            <td style="text-align:right;font-weight:800;white-space:nowrap;">${student.name}</td>
+          <tr style="height:${computedRowHeight}px;">
+            <td class="col-seq" style="font-weight:800;width:18px;text-align:center;">${idx + 1}</td>
+            <td class="col-name" style="width:${nameColWidth};max-width:${nameColWidth};text-align:right;font-weight:800;padding:2px 4px;line-height:1.25;white-space:normal;word-break:break-word;">${student.name}</td>
             ${weekCells}
             ${extraCells}
           </tr>
@@ -1208,10 +1236,10 @@
       `).join('');
 
       const weekHeadersSub = targetWeeks.map((w, wIdx) => `
-        <th ${wIdx > 0 ? 'style="border-right:2px solid #000;"' : ''}>تقييم أسبوعي</th>
-        <th>كراس الواجب</th>
-        <th>المواظبة والسلوك</th>
-        <th style="background:#e2e8f0;">المجموع</th>
+        <th ${wIdx > 0 ? 'style="border-right:2px solid #000;"' : ''}>تقييم</th>
+        <th>واجب</th>
+        <th>سلوك</th>
+        <th style="background:#e2e8f0;">مجموع</th>
       `).join('');
 
       const weekHeadersMax = targetWeeks.map((w, wIdx) => `
@@ -1222,18 +1250,18 @@
       `).join('');
 
       const extraTop = includeTermAvgAndExams ? `
-        <th colspan="4" style="border-right:2.5px solid #000;background:#d1fae5;">متوسط الفصل الدراسي الأول</th>
+        <th colspan="4" style="border-right:2.5px solid #000;background:#d1fae5;">متوسط الفصل الأول</th>
         <th colspan="3" style="border-right:2.5px solid #000;background:#fef3c7;">اختبارات الشهور</th>
       ` : '';
 
       const extraSub = includeTermAvgAndExams ? `
-        <th style="border-right:2.5px solid #000;background:#ecfdf5;">تقييم أسبوعي</th>
-        <th style="background:#ecfdf5;">كراس الواجب</th>
-        <th style="background:#ecfdf5;">المواظبة والسلوك</th>
+        <th style="border-right:2.5px solid #000;background:#ecfdf5;">تقييم</th>
+        <th style="background:#ecfdf5;">واجب</th>
+        <th style="background:#ecfdf5;">سلوك</th>
         <th style="background:#a7f3d0;">المجموع</th>
-        <th style="border-right:2.5px solid #000;background:#fffbeb;">اختبار أكتوبر</th>
-        <th style="background:#fffbeb;">اختبار نوفمبر</th>
-        <th style="background:#fde68a;">مجموع الاختبارين</th>
+        <th style="border-right:2.5px solid #000;background:#fffbeb;">أكتوبر</th>
+        <th style="background:#fffbeb;">نوفمبر</th>
+        <th style="background:#fde68a;">المجموع</th>
       ` : '';
 
       const extraMax = includeTermAvgAndExams ? `
@@ -1251,7 +1279,7 @@
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
             <div>
               <h3 class="font-extrabold text-slate-900 text-base">معاينة الطباعة الرسمية (Portrait A4)</h3>
-              <p class="text-xs text-slate-500">الكشف جاهز للطباعة الفورية بكافة البيانات والترويسة والتوقيعات.</p>
+              <p class="text-xs text-slate-500">تم ضبط عرض خانة الاسم وتمديد صفوف الطلاب لملء كامل الصفحة دون تداخل.</p>
             </div>
             <div class="flex items-center gap-2">
               <button type="button" onclick="triggerImmediatePrint()"
@@ -1265,52 +1293,54 @@
             </div>
           </div>
 
-          <div id="printable-sheet-box" class="border-2 border-slate-900 rounded-xl p-3 bg-white text-slate-950">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #0f172a;padding-bottom:6px;margin-bottom:8px;gap:8px;">
-              <div style="font-size:10px;font-weight:900;line-height:1.4;text-align:right;">
-                <div>${s.directorate}</div>
-                <div>${s.administration}</div>
-                <div>${s.schoolName}</div>
-              </div>
-              <div style="text-align:center;flex:1;">
-                <div style="font-size:12px;font-weight:900;border:1px solid #0f172a;border-radius:8px;padding:3px 10px;display:inline-block;background:#f8fafc;">
-                  سجل رصد درجات ${currentClass.fullName} — مادة ${profile ? profile.subjectName : s.subjectName}
+          <div id="printable-sheet-box" class="border-2 border-slate-900 rounded-xl p-2.5 bg-white text-slate-950" style="display:flex;flex-direction:column;justify-content:space-between;min-height:1030px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #0f172a;padding-bottom:6px;margin-bottom:6px;gap:6px;">
+                <div style="font-size:9.5px;font-weight:900;line-height:1.35;text-align:right;">
+                  <div>${s.directorate}</div>
+                  <div>${s.administration}</div>
+                  <div>${s.schoolName}</div>
                 </div>
-                <div style="font-size:9px;font-weight:700;color:#475569;margin-top:2px;">
-                  ${rangeTitle} • العام الدراسي ${s.academicYear}
+                <div style="text-align:center;flex:1;">
+                  <div style="font-size:11.5px;font-weight:900;border:1px solid #0f172a;border-radius:8px;padding:3px 8px;display:inline-block;background:#f8fafc;">
+                    سجل رصد درجات ${currentClass.fullName} — مادة ${profile ? profile.subjectName : s.subjectName}
+                  </div>
+                  <div style="font-size:8.5px;font-weight:700;color:#475569;margin-top:2px;">
+                    ${rangeTitle} • العام الدراسي ${s.academicYear}
+                  </div>
+                </div>
+                <div style="font-size:9px;font-weight:800;text-align:left;">
+                  <div>${currentClass.gradeLevel || s.gradeLevel}</div>
+                  <div>عدد الطلاب: ${classStudents.length}</div>
                 </div>
               </div>
-              <div style="font-size:9.5px;font-weight:800;text-align:left;">
-                <div>${currentClass.gradeLevel || s.gradeLevel}</div>
-                <div>عدد الطلاب: ${classStudents.length}</div>
+
+              <div style="overflow-x:auto;">
+                <table class="official-sheet ${includeTermAvgAndExams ? 'dense-sheet' : ''}" style="width:100%;table-layout:fixed;border-collapse:collapse;text-align:center;font-size:${includeTermAvgAndExams ? '7px' : '8px'};">
+                  <thead>
+                    <tr style="background:#f1f5f9;font-weight:900;">
+                      <th rowspan="3" class="col-seq" style="border:1px solid #0f172a;padding:2px;width:18px;">م</th>
+                      <th rowspan="3" class="col-name" style="border:1px solid #0f172a;padding:2px 4px;text-align:right;width:${nameColWidth};">الاسم</th>
+                      ${weekHeadersTop}
+                      ${extraTop}
+                    </tr>
+                    <tr style="background:#f8fafc;font-weight:800;font-size:6.8px;">
+                      ${weekHeadersSub}
+                      ${extraSub}
+                    </tr>
+                    <tr style="background:#e2e8f0;font-weight:900;font-size:7.5px;">
+                      ${weekHeadersMax}
+                      ${extraMax}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${tableRowsHTML || `<tr><td colspan="20" style="border:1px solid #0f172a;padding:12px;">لا يوجد طلاب مسجلون في هذا الفصل</td></tr>`}
+                  </tbody>
+                </table>
               </div>
             </div>
 
-            <div style="overflow-x:auto;">
-              <table class="official-sheet" style="width:100%;border-collapse:collapse;text-align:center;font-size:${includeTermAvgAndExams ? '7.5px' : '8.5px'};">
-                <thead>
-                  <tr style="background:#f1f5f9;font-weight:900;">
-                    <th rowspan="3" style="border:1px solid #0f172a;padding:2px;width:22px;">م</th>
-                    <th rowspan="3" style="border:1px solid #0f172a;padding:2px 4px;text-align:right;min-width:95px;">الاسم</th>
-                    ${weekHeadersTop}
-                    ${extraTop}
-                  </tr>
-                  <tr style="background:#f8fafc;font-weight:800;font-size:7px;">
-                    ${weekHeadersSub}
-                    ${extraSub}
-                  </tr>
-                  <tr style="background:#e2e8f0;font-weight:900;font-size:8px;">
-                    ${weekHeadersMax}
-                    ${extraMax}
-                  </tr>
-                </thead>
-                <tbody>
-                  ${tableRowsHTML || `<tr><td colspan="20" style="border:1px solid #0f172a;padding:12px;">لا يوجد طلاب مسجلون في هذا الفصل</td></tr>`}
-                </tbody>
-              </table>
-            </div>
-
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:4px;font-size:10px;font-weight:900;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:6px;border-top:1.5px solid #0f172a;font-size:10px;font-weight:900;">
               <div>معلم المادة / ${profile ? profile.name : s.teacherName}</div>
               <div>مدير المدرسة / ${s.principalName}</div>
             </div>
@@ -1418,31 +1448,31 @@
         }));
 
         const columns = [];
-        const seqW = 36;
-        const nameW = includeTermAvgAndExams ? 168 : 205;
+        const seqW = 30;
+        const nameW = includeTermAvgAndExams ? 215 : 275;
 
         columns.push({ width: seqW, type: 'seq', title: 'م' });
         columns.push({ width: nameW, type: 'name', title: 'الاسم' });
 
         targetWeeks.forEach((w, idx) => {
-          const subW = includeTermAvgAndExams ? 44 : 53;
-          columns.push({ width: subW, type: 'week_sub', weekNum: w.num, field: 'quiz', topGroup: `${w.label} (${w.date})`, subTitle: 'تقييم أسبوعي', maxLabel: '15', weekStart: idx === 0, isWeekBoundary: true });
-          columns.push({ width: subW, type: 'week_sub', weekNum: w.num, field: 'hw', topGroup: '', subTitle: 'كراس الواجب', maxLabel: '15' });
-          columns.push({ width: subW, type: 'week_sub', weekNum: w.num, field: 'behavior', topGroup: '', subTitle: 'المواظبة والسلوك', maxLabel: '10' });
-          columns.push({ width: subW, type: 'week_total', weekNum: w.num, topGroup: '', subTitle: 'المجموع', maxLabel: '40' });
+          const subW = includeTermAvgAndExams ? 37 : 44;
+          columns.push({ width: subW, type: 'week_sub', weekNum: w.num, field: 'quiz', topGroup: `${w.label} (${w.date})`, subTitle: 'تقييم', maxLabel: '15', weekStart: idx === 0, isWeekBoundary: true });
+          columns.push({ width: subW, type: 'week_sub', weekNum: w.num, field: 'hw', topGroup: '', subTitle: 'واجب', maxLabel: '15' });
+          columns.push({ width: subW, type: 'week_sub', weekNum: w.num, field: 'behavior', topGroup: '', subTitle: 'سلوك', maxLabel: '10' });
+          columns.push({ width: subW, type: 'week_total', weekNum: w.num, topGroup: '', subTitle: 'المجموع', maxLabel: '40', bg: '#f1f5f9' });
         });
 
         if (includeTermAvgAndExams) {
-          const avgW = 42;
-          columns.push({ width: avgW, type: 'avg_quiz', topGroup: 'متوسط الفصل الأول', subTitle: 'تقييم أسبوعي', maxLabel: '15', isWeekBoundary: true, bg: '#ecfdf5' });
-          columns.push({ width: avgW, type: 'avg_hw', topGroup: '', subTitle: 'كراس الواجب', maxLabel: '15', bg: '#ecfdf5' });
-          columns.push({ width: avgW, type: 'avg_beh', topGroup: '', subTitle: 'المواظبة والسلوك', maxLabel: '10', bg: '#ecfdf5' });
+          const avgW = 36;
+          columns.push({ width: avgW, type: 'avg_quiz', topGroup: 'متوسط الفصل الأول', subTitle: 'تقييم', maxLabel: '15', isWeekBoundary: true, bg: '#ecfdf5' });
+          columns.push({ width: avgW, type: 'avg_hw', topGroup: '', subTitle: 'واجب', maxLabel: '15', bg: '#ecfdf5' });
+          columns.push({ width: avgW, type: 'avg_beh', topGroup: '', subTitle: 'سلوك', maxLabel: '10', bg: '#ecfdf5' });
           columns.push({ width: avgW, type: 'avg_total', topGroup: '', subTitle: 'المجموع', maxLabel: '40', bg: '#a7f3d0' });
 
-          const exW = 43;
-          columns.push({ width: exW, type: 'exam_oct', topGroup: 'اختبارات الشهور', subTitle: 'اختبار أكتوبر', maxLabel: '15', isWeekBoundary: true, bg: '#fffbeb' });
-          columns.push({ width: exW, type: 'exam_nov', topGroup: '', subTitle: 'اختبار نوفمبر', maxLabel: '15', bg: '#fffbeb' });
-          columns.push({ width: exW, type: 'exam_total', topGroup: '', subTitle: 'مجموع الاختبارين', maxLabel: '30', bg: '#fde68a' });
+          const exW = 38;
+          columns.push({ width: exW, type: 'exam_oct', topGroup: 'اختبارات الشهور', subTitle: 'أكتوبر', maxLabel: '15', isWeekBoundary: true, bg: '#fffbeb' });
+          columns.push({ width: exW, type: 'exam_nov', topGroup: '', subTitle: 'نوفمبر', maxLabel: '15', bg: '#fffbeb' });
+          columns.push({ width: exW, type: 'exam_total', topGroup: '', subTitle: 'المجموع', maxLabel: '30', bg: '#fde68a' });
         }
 
         const rawSumW = columns.reduce((acc, c) => acc + c.width, 0);
@@ -1451,54 +1481,96 @@
           c.width = c.width * ratio;
         });
 
-        const tableTopY = headerBottomY + 14;
-        const r1H = 26;
+        const tableTopY = headerBottomY + 12;
+        const r1H = 30;
         const r2H = 24;
         const r3H = 20;
         const headTotalH = r1H + r2H + r3H;
 
         let curX = pageW - marginX;
-        columns.forEach(col => {
+        let idxCol = 0;
+        while (idxCol < columns.length) {
+          const col = columns[idxCol];
           const xLeft = curX - col.width;
 
-          ctx.fillStyle = col.bg || '#e2e8f0';
-          ctx.fillRect(xLeft, tableTopY, col.width, r1H);
-          ctx.strokeStyle = '#0f172a';
-          ctx.lineWidth = col.isWeekBoundary ? 2 : 1;
-          ctx.strokeRect(xLeft, tableTopY, col.width, r1H);
-
-          ctx.fillStyle = col.bg || '#f8fafc';
-          ctx.fillRect(xLeft, tableTopY + r1H, col.width, r2H);
-          ctx.strokeRect(xLeft, tableTopY + r1H, col.width, r2H);
-
-          ctx.fillStyle = col.bg || '#f1f5f9';
-          ctx.fillRect(xLeft, tableTopY + r1H + r2H, col.width, r3H);
-          ctx.strokeRect(xLeft, tableTopY + r1H + r2H, col.width, r3H);
-
-          ctx.fillStyle = '#0f172a';
-          ctx.textAlign = 'center';
-
           if (col.type === 'seq' || col.type === 'name') {
-            ctx.font = 'bold 13px Cairo, sans-serif';
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(xLeft, tableTopY, col.width, headTotalH);
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = col.type === 'name' ? 2.2 : 1.2;
+            ctx.strokeRect(xLeft, tableTopY, col.width, headTotalH);
+
+            ctx.fillStyle = '#0f172a';
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 14px Cairo, sans-serif';
             ctx.fillText(col.title, xLeft + col.width / 2, tableTopY + headTotalH / 2 + 5);
+
+            curX = xLeft;
+            idxCol++;
           } else {
-            if (col.topGroup) {
-              ctx.font = 'bold 9.5px Cairo, sans-serif';
-              ctx.fillText(col.topGroup, xLeft + col.width * 2, tableTopY + 16);
+            // تحديد عدد الأعمدة المدمجة في الترويسة العلوية (4 للأسبوع أو المتوسط، 3 للاختبارات)
+            const spanCount = col.type === 'exam_oct' ? 3 : 4;
+            let groupW = 0;
+            for (let k = 0; k < spanCount && (idxCol + k) < columns.length; k++) {
+              groupW += columns[idxCol + k].width;
             }
-            ctx.font = 'bold 8.5px Cairo, sans-serif';
-            ctx.fillText(col.subTitle, xLeft + col.width / 2, tableTopY + r1H + 15);
+            const groupLeftX = curX - groupW;
 
-            ctx.font = 'bold 10px Cairo, sans-serif';
-            ctx.fillStyle = '#1e3a8a';
-            ctx.fillText(col.maxLabel, xLeft + col.width / 2, tableTopY + r1H + r2H + 14);
+            // رسم الخانة العلوية المدمجة بالكامل بدون خطوط تقسيم داخلية
+            ctx.fillStyle = col.bg || '#dbeafe';
+            ctx.fillRect(groupLeftX, tableTopY, groupW, r1H);
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 2.2;
+            ctx.strokeRect(groupLeftX, tableTopY, groupW, r1H);
+
+            ctx.fillStyle = '#0f172a';
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 11.5px Cairo, sans-serif';
+            ctx.fillText(col.topGroup || '', groupLeftX + groupW / 2, tableTopY + 19);
+
+            // رسم الصف الثاني والثالث الفرعيين لكل عمود داخل المجموعة
+            let subCurX = curX;
+            for (let k = 0; k < spanCount && (idxCol + k) < columns.length; k++) {
+              const subCol = columns[idxCol + k];
+              const subLeft = subCurX - subCol.width;
+
+              ctx.fillStyle = subCol.bg || '#f8fafc';
+              ctx.fillRect(subLeft, tableTopY + r1H, subCol.width, r2H);
+              ctx.strokeStyle = '#0f172a';
+              ctx.lineWidth = 1;
+              ctx.strokeRect(subLeft, tableTopY + r1H, subCol.width, r2H);
+
+              ctx.fillStyle = subCol.bg || '#f1f5f9';
+              ctx.fillRect(subLeft, tableTopY + r1H + r2H, subCol.width, r3H);
+              ctx.strokeRect(subLeft, tableTopY + r1H + r2H, subCol.width, r3H);
+
+              ctx.fillStyle = '#0f172a';
+              ctx.textAlign = 'center';
+              ctx.font = 'bold 9.5px Cairo, sans-serif';
+              ctx.fillText(subCol.subTitle, subLeft + subCol.width / 2, tableTopY + r1H + 16);
+
+              ctx.font = 'bold 10.5px Cairo, sans-serif';
+              ctx.fillStyle = '#1e3a8a';
+              ctx.fillText(subCol.maxLabel, subLeft + subCol.width / 2, tableTopY + r1H + r2H + 14);
+
+              subCurX = subLeft;
+            }
+
+            // رسم إطار خارجي سميك للمجموعة بالكامل لتمييز الحدود الفاصلة بين الأسابيع
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 2.2;
+            ctx.strokeRect(groupLeftX, tableTopY, groupW, headTotalH);
+
+            curX = groupLeftX;
+            idxCol += spanCount;
           }
+        }
 
-          curX = xLeft;
-        });
-
+        // تمديد ارتفاع صفوف الطلاب لتمتلئ كامل الصفحة حتى التذييل دون ترك ربع الصفحة فارغاً
         const bodyTopY = tableTopY + headTotalH;
-        const rowH = Math.min(34, Math.max(24, Math.floor((pageH - bodyTopY - 90) / Math.max(1, classStudents.length))));
+        const footerAreaH = 65;
+        const availableBodyH = pageH - bodyTopY - footerAreaH;
+        const rowH = Math.min(72, Math.max(32, Math.floor(availableBodyH / Math.max(1, classStudents.length))));
 
         classStudents.forEach((student, idx) => {
           const yRow = bodyTopY + idx * rowH;
@@ -1511,7 +1583,7 @@
             ctx.fillStyle = col.bg || (idx % 2 === 0 ? '#ffffff' : '#f8fafc');
             ctx.fillRect(xLeft, yRow, col.width, rowH);
             ctx.strokeStyle = '#0f172a';
-            ctx.lineWidth = col.isWeekBoundary ? 2 : 0.9;
+            ctx.lineWidth = col.isWeekBoundary ? 2.2 : 1;
             ctx.strokeRect(xLeft, yRow, col.width, rowH);
 
             ctx.fillStyle = '#0f172a';
@@ -1519,20 +1591,52 @@
 
             if (col.type === 'seq') {
               ctx.textAlign = 'center';
-              ctx.font = 'bold 11px Cairo, sans-serif';
+              ctx.font = 'bold 12px Cairo, sans-serif';
               textVal = String(idx + 1);
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'name') {
+              // قصّ الرسم داخل حدود عمود الاسم والتفاف الاسم الطويل على سطرين لمنع أي تداخل نهائياً
+              ctx.save();
+              ctx.beginPath();
+              ctx.rect(xLeft + 3, yRow + 2, col.width - 6, rowH - 4);
+              ctx.clip();
+
               ctx.textAlign = 'right';
-              ctx.font = 'bold 11px Cairo, sans-serif';
-              textVal = student.name;
-              ctx.fillText(textVal, xLeft + col.width - 6, yRow + rowH / 2 + 4);
+              const fontSize = includeTermAvgAndExams ? 11.5 : 13;
+              ctx.font = `bold ${fontSize}px Cairo, sans-serif`;
+              const maxTextW = col.width - 12;
+              const fullName = student.name;
+
+              if (ctx.measureText(fullName).width <= maxTextW || rowH < 38) {
+                ctx.fillText(fullName, xLeft + col.width - 6, yRow + rowH / 2 + 4);
+              } else {
+                const words = fullName.split(' ');
+                let line1 = '';
+                let line2 = '';
+                for (let i = 0; i < words.length; i++) {
+                  const testLine = line1 ? `${line1} ${words[i]}` : words[i];
+                  if (ctx.measureText(testLine).width <= maxTextW) {
+                    line1 = testLine;
+                  } else {
+                    line2 = words.slice(i).join(' ');
+                    break;
+                  }
+                }
+                if (line2) {
+                  ctx.fillText(line1, xLeft + col.width - 6, yRow + rowH / 2 - 4);
+                  ctx.fillText(line2, xLeft + col.width - 6, yRow + rowH / 2 + 12);
+                } else {
+                  ctx.fillText(line1, xLeft + col.width - 6, yRow + rowH / 2 + 4);
+                }
+              }
+              ctx.restore();
             } else if (col.type === 'week_sub') {
               const rec = appData.grades[`${student.id}_${col.weekNum}`] || {};
               const tok = parseGradeToken(rec[col.field]);
               textVal = tok.display;
               ctx.textAlign = 'center';
-              ctx.font = 'bold 10px Cairo, sans-serif';
+              ctx.fillStyle = tok.type === 'absent' ? '#dc2626' : '#0f172a';
+              ctx.font = 'bold 11.5px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'week_total') {
               const rec = appData.grades[`${student.id}_${col.weekNum}`] || {};
@@ -1542,42 +1646,42 @@
               const hasAny = qTok.type !== 'empty' || hTok.type !== 'empty' || bTok.type !== 'empty';
               textVal = hasAny ? String(Number((qTok.num + hTok.num + bTok.num).toFixed(2))) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 10.5px Cairo, sans-serif';
+              ctx.font = 'bold 12px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'avg_quiz' && summary) {
               textVal = summary.quizCount > 0 ? String(summary.quizAvg) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 10px Cairo, sans-serif';
+              ctx.font = 'bold 11px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'avg_hw' && summary) {
               textVal = summary.hwCount > 0 ? String(summary.hwAvg) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 10px Cairo, sans-serif';
+              ctx.font = 'bold 11px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'avg_beh' && summary) {
               textVal = summary.behCount > 0 ? String(summary.behAvg) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 10px Cairo, sans-serif';
+              ctx.font = 'bold 11px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'avg_total' && summary) {
               textVal = summary.hasAnyGrade ? String(summary.totalFinal) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 10.5px Cairo, sans-serif';
+              ctx.font = 'bold 11.5px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'exam_oct') {
               textVal = (exams.oct !== null && exams.oct !== undefined && exams.oct !== '') ? String(exams.oct) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 10px Cairo, sans-serif';
+              ctx.font = 'bold 11px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'exam_nov') {
               textVal = (exams.nov !== null && exams.nov !== undefined && exams.nov !== '') ? String(exams.nov) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 10px Cairo, sans-serif';
+              ctx.font = 'bold 11px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'exam_total' && summary) {
               textVal = summary.hasAnyExam ? String(summary.examsTotal) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 10.5px Cairo, sans-serif';
+              ctx.font = 'bold 11.5px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             }
 
@@ -1585,9 +1689,16 @@
           });
         });
 
-        const footerY = Math.max(bodyTopY + classStudents.length * rowH + 34, pageH - 56);
+        const footerY = pageH - 36;
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(marginX, footerY - 24);
+        ctx.lineTo(pageW - marginX, footerY - 24);
+        ctx.stroke();
+
         ctx.fillStyle = '#0f172a';
-        ctx.font = 'bold 16px Cairo, sans-serif';
+        ctx.font = 'bold 17px Cairo, sans-serif';
         ctx.textAlign = 'right';
         ctx.fillText(`معلم المادة / ${profile ? profile.name : s.teacherName}`, pageW - marginX, footerY);
 
@@ -4317,17 +4428,17 @@
                           <td class="border-l border-slate-300 p-0 ${wIdx > 0 ? 'week-sep border-r-[2.5px] border-r-slate-950' : ''}">
                             <input type="text" value="${qTok.display}" placeholder="" title="أدخل الدرجة أو صفر أو غ"
                               onchange="updateOfficialSheetGrade('${student.id}', ${w.num}, 'quiz', this.value, 15, this)"
-                              class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-slate-300 focus:border-brand-600 focus:bg-brand-50/40 focus:outline-none font-bold ${qTok.type === 'absent' ? 'text-rose-600' : 'text-slate-900'}" />
+                              class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-slate-300 focus:border-brand-600 focus:bg-brand-50/40 focus:outline-none font-extrabold ${qTok.type === 'absent' ? 'text-rose-600' : 'text-slate-950'}" />
                           </td>
                           <td class="border-l border-slate-300 p-0">
                             <input type="text" value="${hTok.display}" placeholder="" title="أدخل الدرجة أو صفر أو غ"
                               onchange="updateOfficialSheetGrade('${student.id}', ${w.num}, 'hw', this.value, 15, this)"
-                              class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-slate-300 focus:border-emerald-600 focus:bg-emerald-50/40 focus:outline-none font-bold ${hTok.type === 'absent' ? 'text-rose-600' : 'text-slate-900'}" />
+                              class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-slate-300 focus:border-emerald-600 focus:bg-emerald-50/40 focus:outline-none font-extrabold ${hTok.type === 'absent' ? 'text-rose-600' : 'text-slate-950'}" />
                           </td>
                           <td class="border-l border-slate-300 p-0">
                             <input type="text" value="${bTok.display}" placeholder="" title="أدخل الدرجة أو صفر أو غ"
                               onchange="updateOfficialSheetGrade('${student.id}', ${w.num}, 'behavior', this.value, 10, this)"
-                              class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-slate-300 focus:border-amber-500 focus:bg-amber-50/40 focus:outline-none font-bold ${bTok.type === 'absent' ? 'text-rose-600' : 'text-slate-900'}" />
+                              class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-slate-300 focus:border-amber-500 focus:bg-amber-50/40 focus:outline-none font-extrabold ${bTok.type === 'absent' ? 'text-rose-600' : 'text-slate-950'}" />
                           </td>
                           <td id="sheet-total-${student.id}-${w.num}"
                             class="py-0.5 px-0.5 font-black text-slate-950 bg-slate-100/90">
@@ -4357,12 +4468,12 @@
                         <td class="week-sep border-r-[3px] border-r-slate-950 border-l border-slate-300 p-0 bg-amber-50/30">
                           <input type="text" value="${octInputVal}" placeholder="" title="أدخل الدرجة أو صفر أو غ"
                             onchange="updateMonthlyExam('${student.id}', 'oct', this.value, this)"
-                            class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-amber-400 focus:border-amber-600 focus:bg-amber-100/50 focus:outline-none font-bold ${octInputVal === 'غ' ? 'text-rose-600' : 'text-slate-900'}" />
+                            class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-amber-400 focus:border-amber-600 focus:bg-amber-100/50 focus:outline-none font-extrabold ${octInputVal === 'غ' ? 'text-rose-600' : 'text-slate-950'}" />
                         </td>
                         <td class="border-l border-slate-300 p-0 bg-amber-50/30">
                           <input type="text" value="${novInputVal}" placeholder="" title="أدخل الدرجة أو صفر أو غ"
                             onchange="updateMonthlyExam('${student.id}', 'nov', this.value, this)"
-                            class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-amber-400 focus:border-amber-600 focus:bg-amber-100/50 focus:outline-none font-bold ${novInputVal === 'غ' ? 'text-rose-600' : 'text-slate-900'}" />
+                            class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-amber-400 focus:border-amber-600 focus:bg-amber-100/50 focus:outline-none font-extrabold ${novInputVal === 'غ' ? 'text-rose-600' : 'text-slate-950'}" />
                         </td>
                         <td id="exams-total-${student.id}"
                           class="py-0.5 px-0.5 font-black text-amber-950 bg-amber-200/70">
@@ -4542,76 +4653,118 @@
         appData.students.filter(st => st.classId === uiState.selectedClassId)
       );
 
-      const metaRows = [
-        [`"${s.directorate}"`, `"${s.administration}"`, `"${s.schoolName}"`, `"المادة: ${profile ? profile.subjectName : s.subjectName}"`, `"${currentClass.fullName}"`].join(','),
-        ''
-      ];
-
-      const headers = ['م', 'الاسم'];
-      weekNumbers.forEach(w => {
+      const weekGroupCells = weekNumbers.map(w => {
         const wDate = getWeekSaturdayDate(s.studyStartDate, w);
-        headers.push(
-          `${getArabicWeekOrdinal(w)} (${wDate}) - تقييم (15)`,
-          `${getArabicWeekOrdinal(w)} - كراس الواجب (15)`,
-          `${getArabicWeekOrdinal(w)} - المواظبة والسلوك (10)`,
-          `${getArabicWeekOrdinal(w)} - المجموع (40)`
-        );
-      });
+        return `<th colspan="4" style="background:#dbeafe;border:1.5px solid #0f172a;padding:6px;">${getArabicWeekOrdinal(w)} (${wDate})</th>`;
+      }).join('');
 
-      if (includeTermAvgAndExams) {
-        headers.push(
-          'متوسط الفصل الأول - تقييم (15)',
-          'متوسط الفصل الأول - واجب (15)',
-          'متوسط الفصل الأول - سلوك (10)',
-          'متوسط الفصل الأول - المجموع (40)',
-          'اختبار أكتوبر (15)',
-          'اختبار نوفمبر (15)',
-          'مجموع الاختبارين (30)'
-        );
-      }
+      const subHeaderCells = weekNumbers.map(() => `
+        <th style="background:#f1f5f9;border:1px solid #0f172a;padding:5px;">تقييم أسبوعي (15)</th>
+        <th style="background:#f1f5f9;border:1px solid #0f172a;padding:5px;">كراس الواجب (15)</th>
+        <th style="background:#f1f5f9;border:1px solid #0f172a;padding:5px;">المواظبة والسلوك (10)</th>
+        <th style="background:#e2e8f0;border:1.5px solid #0f172a;padding:5px;font-weight:bold;">المجموع (40)</th>
+      `).join('');
 
-      const rows = classStudents.map((st, idx) => {
-        const row = [idx + 1, `"${st.name}"`];
-        weekNumbers.forEach(w => {
+      const extraGroupHeaders = includeTermAvgAndExams ? `
+        <th colspan="4" style="background:#d1fae5;border:1.5px solid #0f172a;padding:6px;">متوسط الفصل الدراسي الأول</th>
+        <th colspan="3" style="background:#fef3c7;border:1.5px solid #0f172a;padding:6px;">اختبارات الشهور</th>
+      ` : '';
+
+      const extraSubHeaders = includeTermAvgAndExams ? `
+        <th style="background:#ecfdf5;border:1px solid #0f172a;padding:5px;">متوسط التقييم (15)</th>
+        <th style="background:#ecfdf5;border:1px solid #0f172a;padding:5px;">متوسط الواجب (15)</th>
+        <th style="background:#ecfdf5;border:1px solid #0f172a;padding:5px;">متوسط السلوك (10)</th>
+        <th style="background:#a7f3d0;border:1.5px solid #0f172a;padding:5px;">المجموع (40)</th>
+        <th style="background:#fffbeb;border:1px solid #0f172a;padding:5px;">اختبار أكتوبر (15)</th>
+        <th style="background:#fffbeb;border:1px solid #0f172a;padding:5px;">اختبار نوفمبر (15)</th>
+        <th style="background:#fde68a;border:1.5px solid #0f172a;padding:5px;">مجموع الاختبارين (30)</th>
+      ` : '';
+
+      const bodyRows = classStudents.map((st, idx) => {
+        const wCells = weekNumbers.map(w => {
           const rec = appData.grades[`${st.id}_${w}`] || { quiz: null, hw: null, behavior: null };
           const qTok = parseGradeToken(rec.quiz);
           const hTok = parseGradeToken(rec.hw);
           const bTok = parseGradeToken(rec.behavior);
           const hasAny = qTok.type !== 'empty' || hTok.type !== 'empty' || bTok.type !== 'empty';
           const sum = hasAny ? Number((qTok.num + hTok.num + bTok.num).toFixed(2)) : '';
-          row.push(qTok.display, hTok.display, bTok.display, sum);
-        });
+          return `
+            <td style="border:1px solid #0f172a;text-align:center;padding:5px;">${qTok.display}</td>
+            <td style="border:1px solid #0f172a;text-align:center;padding:5px;">${hTok.display}</td>
+            <td style="border:1px solid #0f172a;text-align:center;padding:5px;">${bTok.display}</td>
+            <td style="border:1.5px solid #0f172a;text-align:center;padding:5px;background:#f8fafc;font-weight:bold;">${sum}</td>
+          `;
+        }).join('');
 
+        let extraCells = '';
         if (includeTermAvgAndExams) {
           const sum = calculateStudentTermSummary(st.id);
-          row.push(
-            sum.quizCount > 0 ? sum.quizAvg : '',
-            sum.hwCount > 0 ? sum.hwAvg : '',
-            sum.behCount > 0 ? sum.behAvg : '',
-            sum.hasAnyGrade ? sum.totalFinal : '',
-            sum.octVal !== null ? sum.octVal : '',
-            sum.novVal !== null ? sum.novVal : '',
-            sum.hasAnyExam ? sum.examsTotal : ''
-          );
+          extraCells = `
+            <td style="border:1px solid #0f172a;text-align:center;padding:5px;background:#ecfdf5;">${sum.quizCount > 0 ? sum.quizAvg : ''}</td>
+            <td style="border:1px solid #0f172a;text-align:center;padding:5px;background:#ecfdf5;">${sum.hwCount > 0 ? sum.hwAvg : ''}</td>
+            <td style="border:1px solid #0f172a;text-align:center;padding:5px;background:#ecfdf5;">${sum.behCount > 0 ? sum.behAvg : ''}</td>
+            <td style="border:1.5px solid #0f172a;text-align:center;padding:5px;background:#a7f3d0;font-weight:bold;">${sum.hasAnyGrade ? sum.totalFinal : ''}</td>
+            <td style="border:1px solid #0f172a;text-align:center;padding:5px;background:#fffbeb;">${sum.octVal !== null ? sum.octVal : ''}</td>
+            <td style="border:1px solid #0f172a;text-align:center;padding:5px;background:#fffbeb;">${sum.novVal !== null ? sum.novVal : ''}</td>
+            <td style="border:1.5px solid #0f172a;text-align:center;padding:5px;background:#fde68a;font-weight:bold;">${sum.hasAnyExam ? sum.examsTotal : ''}</td>
+          `;
         }
 
-        return row.join(',');
-      });
+        return `
+          <tr>
+            <td style="border:1px solid #0f172a;text-align:center;padding:6px;font-weight:bold;">${idx + 1}</td>
+            <td style="border:1.5px solid #0f172a;text-align:right;padding:6px 10px;font-weight:bold;white-space:nowrap;">${st.name}</td>
+            ${wCells}
+            ${extraCells}
+          </tr>
+        `;
+      }).join('');
 
-      const footerRows = [
-        '',
-        [`"معلم المادة / ${profile ? profile.name : s.teacherName}"`, '', '', `"مدير المدرسة / ${s.principalName}"`].join(',')
-      ];
+      const totalCols = 2 + weekNumbers.length * 4 + (includeTermAvgAndExams ? 7 : 0);
+      const excelHtml = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40" dir="rtl">
+        <head><meta charset="UTF-8" /></head>
+        <body style="font-family:Arial, sans-serif;direction:rtl;">
+          <table style="border-collapse:collapse;width:100%;">
+            <tr>
+              <th colspan="${totalCols}" style="font-size:14pt;font-weight:bold;text-align:right;padding:6px;">
+                ${s.directorate} - ${s.administration} - ${s.schoolName}
+              </th>
+            </tr>
+            <tr>
+              <th colspan="${totalCols}" style="font-size:13pt;font-weight:bold;text-align:center;padding:8px;background:#eff6ff;border:1.5px solid #0f172a;">
+                سجل رصد درجات ${currentClass.fullName} (${currentClass.gradeLevel || s.gradeLevel}) — مادة ${profile ? profile.subjectName : s.subjectName} — العام الدراسي ${s.academicYear}
+              </th>
+            </tr>
+            <tr>
+              <th rowspan="2" style="background:#e2e8f0;border:1.5px solid #0f172a;padding:6px;width:40px;">م</th>
+              <th rowspan="2" style="background:#e2e8f0;border:1.5px solid #0f172a;padding:6px;width:240px;text-align:right;">اسم الطالب</th>
+              ${weekGroupCells}
+              ${extraGroupHeaders}
+            </tr>
+            <tr>
+              ${subHeaderCells}
+              ${extraSubHeaders}
+            </tr>
+            ${bodyRows}
+            <tr><td colspan="${totalCols}" style="height:16px;"></td></tr>
+            <tr>
+              <td colspan="2" style="font-weight:bold;font-size:12pt;text-align:right;padding:6px;">معلم المادة / ${profile ? profile.name : s.teacherName}</td>
+              <td colspan="${Math.max(1, totalCols - 2)}" style="font-weight:bold;font-size:12pt;text-align:left;padding:6px;">مدير المدرسة / ${s.principalName}</td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `;
 
-      const csvContent = '\uFEFF' + [...metaRows, headers.join(','), ...rows, ...footerRows].join('\n');
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob(['\uFEFF' + excelHtml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `كشف_درجات_${currentClass.name.replace('/', '-')}_أسبوع_${weekNumbers[0]}_إلى_${weekNumbers[weekNumbers.length - 1]}.csv`;
+      link.download = `كشف_درجات_${currentClass.name.replace('/', '-')}_أسبوع_${weekNumbers[0]}_إلى_${weekNumbers[weekNumbers.length - 1]}.xls`;
       link.click();
       URL.revokeObjectURL(url);
-      showToast('تم تصدير الكشف إلى Excel (CSV) بنجاح', 'success');
+      showToast('تم تصدير ملف Excel المنسق بالجداول والألوان بنجاح', 'success');
     }
 
     /*************************************************************************

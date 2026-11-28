@@ -104,13 +104,16 @@
     @media print {
       @page {
         size: A4 portrait;
-        margin: 6mm 5mm;
+        margin: 0 !important;
       }
 
-      body {
+      html, body {
+        width: 210mm !important;
+        height: 297mm !important;
         background: #ffffff !important;
         margin: 0 !important;
         padding: 0 !important;
+        overflow: hidden !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
@@ -120,78 +123,134 @@
       }
 
       #dedicated-print-zone {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+
+      #dedicated-print-zone img.a4-canvas-print {
+        width: 210mm !important;
+        height: 297mm !important;
+        max-width: 210mm !important;
+        max-height: 297mm !important;
+        object-fit: contain !important;
         display: block !important;
-        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
 
       .print-container {
         box-shadow: none !important;
         border: none !important;
-        padding: 0 !important;
+        padding: 4mm !important;
         margin: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
       }
 
+      #printable-sheet-box {
+        border: 1.5pt solid #000000 !important;
+        border-radius: 6px !important;
+        padding: 3mm 2.5mm !important;
+        height: 282mm !important;
+        max-height: 282mm !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        box-sizing: border-box !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+
       .print-table-wrapper {
-        overflow: visible !important;
-        border: 1.5px solid #000000 !important;
+        overflow: hidden !important;
+        border: 1.2pt solid #000000 !important;
         width: 100% !important;
+        box-sizing: border-box !important;
       }
 
       .official-sheet {
         width: 100% !important;
+        max-width: 100% !important;
         table-layout: fixed !important;
-        font-size: 7.5pt !important;
         border-collapse: collapse !important;
-      }
-
-      .official-sheet.dense-sheet {
-        font-size: 6.3pt !important;
       }
 
       .official-sheet th,
       .official-sheet td {
-        padding: 1.5px 1px !important;
-        border: 0.75pt solid #000000 !important;
-        line-height: 1.15 !important;
+        padding: 0.5px 1px !important;
+        border: 0.7pt solid #000000 !important;
+        line-height: 1.1 !important;
         overflow: hidden !important;
+        box-sizing: border-box !important;
       }
 
       .official-sheet th.col-seq,
       .official-sheet td.col-seq {
-        width: 18px !important;
+        width: 3.2% !important;
+        font-size: 8pt !important;
+        font-weight: 900 !important;
+        color: #000000 !important;
       }
 
       .official-sheet th.col-name,
       .official-sheet td.col-name {
-        width: 122px !important;
-        max-width: 122px !important;
+        width: 21.8% !important;
         white-space: normal !important;
         word-break: break-word !important;
         text-align: right !important;
-        padding-right: 3px !important;
-        padding-left: 2px !important;
+        padding: 1px 3px !important;
+        font-size: 7.4pt !important;
+        font-weight: 800 !important;
+        color: #000000 !important;
+        line-height: 1.1 !important;
       }
 
       .official-sheet.dense-sheet th.col-name,
       .official-sheet.dense-sheet td.col-name {
-        width: 96px !important;
-        max-width: 96px !important;
+        width: 18.5% !important;
+        font-size: 6.8pt !important;
+      }
+
+      .official-sheet td.grade-cell {
+        font-size: 8.8pt !important;
+        font-weight: 900 !important;
+        color: #1d4ed8 !important;
+      }
+
+      .official-sheet td.total-cell {
+        font-size: 9.8pt !important;
+        font-weight: 900 !important;
+        color: #dc2626 !important;
+        background-color: #e0f2fe !important;
+      }
+
+      .official-sheet.dense-sheet td.grade-cell {
+        font-size: 7.4pt !important;
+      }
+
+      .official-sheet.dense-sheet td.total-cell {
+        font-size: 8.2pt !important;
+        background-color: #bae6fd !important;
       }
 
       .official-sheet th.week-sep,
       .official-sheet td.week-sep {
-        border-right: 2pt solid #000000 !important;
+        border-right: 1.6pt solid #000000 !important;
       }
 
       .official-sheet input {
         width: 100% !important;
         font-size: inherit !important;
+        font-weight: 900 !important;
         padding: 0 !important;
         border: none !important;
         text-align: center !important;
-        color: #000000 !important;
         background: transparent !important;
       }
 
@@ -429,6 +488,28 @@
     const GRADE_LEVELS = ['الصف الأول الثانوي', 'الصف الثاني الثانوي', 'الصف الثالث الثانوي'];
 
     const DEFAULT_STATE = {
+      schools: [
+        {
+          id: 'sch_sadfa_boys',
+          code: 'sadfa_boys',
+          adminUsername: 'teacher',
+          adminPassword: '1234',
+          settings: {
+            directorate: 'مديرية التربية والتعليم بأسيوط',
+            administration: 'إدارة صدفا التعليمية',
+            schoolName: 'مدرسة صدفا الثانوية بنين',
+            teacherName: 'أ / مينا عطاالله أنور',
+            teacherTitle: 'معلم أول أ برمجة وذكاء اصطناعي',
+            whatsappNumber: '201200000000',
+            subjectName: 'البرمجة والذكاء الاصطناعي',
+            gradeLevel: 'الصف الأول الثانوي',
+            academicYear: '2026 / 2027',
+            principalName: 'أ / عصام عبدالهادي خلف',
+            studyStartDate: '2026-09-19'
+          }
+        }
+      ],
+      activeSchoolId: 'sch_sadfa_boys',
       settings: {
         directorate: 'مديرية التربية والتعليم بأسيوط',
         administration: 'إدارة صدفا التعليمية',
@@ -446,24 +527,25 @@
       },
       subTeachers: [],
       classes: [
-        { id: 'c1', name: '1/1', fullName: 'فصل 1/1', gradeLevel: 'الصف الأول الثانوي' },
-        { id: 'c2', name: '1/2', fullName: 'فصل 1/2', gradeLevel: 'الصف الأول الثانوي' }
+        { id: 'c1', schoolId: 'sch_sadfa_boys', name: '1/1', fullName: 'فصل 1/1', gradeLevel: 'الصف الأول الثانوي' },
+        { id: 'c2', schoolId: 'sch_sadfa_boys', name: '1/2', fullName: 'فصل 1/2', gradeLevel: 'الصف الأول الثانوي' }
       ],
       students: [
-        { id: 's1', username: '1001', password: '1001', name: 'عمر محمد فتحي احمد بخيت', classId: 'c1' },
-        { id: 's2', username: '1002', password: '1002', name: 'أحمد محمود حسن', classId: 'c1' },
-        { id: 's3', username: '1003', password: '1003', name: 'سلمى وليد عبد الرحمن', classId: 'c1' },
-        { id: 's4', username: '1004', password: '1004', name: 'يوسف إبراهيم علي', classId: 'c1' },
-        { id: 's5', username: '1005', password: '1005', name: 'مريم سيد أحمد', classId: 'c1' },
-        { id: 's6', username: '1006', password: '1006', name: 'كريم محمد عبد الله', classId: 'c1' },
-        { id: 's7', username: '1007', password: '1007', name: 'ندى مصطفى كامل', classId: 'c1' },
-        { id: 's8', username: '1008', password: '1008', name: 'زياد طارق محمود', classId: 'c1' },
-        { id: 's9', username: '2001', password: '2001', name: 'إبراهيم خالد سعيد', classId: 'c2' },
-        { id: 's10', username: '2002', password: '2002', name: 'باسم طارق عبد الله', classId: 'c2' }
+        { id: 's1', schoolId: 'sch_sadfa_boys', username: '1001', password: '1001', name: 'عمر محمد فتحي احمد بخيت', classId: 'c1' },
+        { id: 's2', schoolId: 'sch_sadfa_boys', username: '1002', password: '1002', name: 'أحمد محمود حسن', classId: 'c1' },
+        { id: 's3', schoolId: 'sch_sadfa_boys', username: '1003', password: '1003', name: 'سلمى وليد عبد الرحمن', classId: 'c1' },
+        { id: 's4', schoolId: 'sch_sadfa_boys', username: '1004', password: '1004', name: 'يوسف إبراهيم علي', classId: 'c1' },
+        { id: 's5', schoolId: 'sch_sadfa_boys', username: '1005', password: '1005', name: 'مريم سيد أحمد', classId: 'c1' },
+        { id: 's6', schoolId: 'sch_sadfa_boys', username: '1006', password: '1006', name: 'كريم محمد عبد الله', classId: 'c1' },
+        { id: 's7', schoolId: 'sch_sadfa_boys', username: '1007', password: '1007', name: 'ندى مصطفى كامل', classId: 'c1' },
+        { id: 's8', schoolId: 'sch_sadfa_boys', username: '1008', password: '1008', name: 'زياد طارق محمود', classId: 'c1' },
+        { id: 's9', schoolId: 'sch_sadfa_boys', username: '2001', password: '2001', name: 'إبراهيم خالد سعيد', classId: 'c2' },
+        { id: 's10', schoolId: 'sch_sadfa_boys', username: '2002', password: '2002', name: 'باسم طارق عبد الله', classId: 'c2' }
       ],
       contents: [
         {
           id: 'cnt1',
+          schoolId: 'sch_sadfa_boys',
           classId: 'c1',
           type: 'classwork',
           date: TODAY,
@@ -477,6 +559,7 @@
         },
         {
           id: 'cnt2',
+          schoolId: 'sch_sadfa_boys',
           classId: 'c1',
           type: 'homework',
           date: TODAY,
@@ -490,6 +573,7 @@
         },
         {
           id: 'cnt3',
+          schoolId: 'sch_sadfa_boys',
           classId: 'c1',
           type: 'quiz',
           date: TODAY,
@@ -503,6 +587,7 @@
         },
         {
           id: 'cnt4',
+          schoolId: 'sch_sadfa_boys',
           classId: 'c1',
           type: 'classwork',
           date: YESTERDAY,
@@ -559,28 +644,130 @@
       }
     };
 
+    function normalizeSchoolsInState(stateObj) {
+      const baseSettings = { ...DEFAULT_STATE.settings, ...(stateObj.settings || {}) };
+      let schools = Array.isArray(stateObj.schools) && stateObj.schools.length > 0
+        ? stateObj.schools.map((sc, i) => ({
+            ...sc,
+            id: sc.id || (i === 0 ? 'sch_sadfa_boys' : `sch_${Date.now()}_${i}`),
+            code: sc.code || `school_${i + 1}`,
+            adminUsername: sc.adminUsername || (i === 0 ? baseSettings.teacherUsername : `admin_${i + 1}`),
+            adminPassword: sc.adminPassword || (i === 0 ? baseSettings.teacherPassword : '1234'),
+            settings: {
+              ...DEFAULT_STATE.settings,
+              ...(sc.settings || {}),
+              teacherUsername: sc.adminUsername || baseSettings.teacherUsername,
+              teacherPassword: sc.adminPassword || baseSettings.teacherPassword
+            }
+          }))
+        : [
+            {
+              id: 'sch_sadfa_boys',
+              code: 'sadfa_boys',
+              adminUsername: baseSettings.teacherUsername,
+              adminPassword: baseSettings.teacherPassword,
+              settings: { ...baseSettings }
+            }
+          ];
+
+      const activeSchoolId = stateObj.activeSchoolId && schools.some(s => s.id === stateObj.activeSchoolId)
+        ? stateObj.activeSchoolId
+        : schools[0].id;
+
+      const classes = (Array.isArray(stateObj.classes) && stateObj.classes.length > 0 ? stateObj.classes : DEFAULT_STATE.classes).map(c => ({
+        ...c,
+        schoolId: c.schoolId || 'sch_sadfa_boys',
+        gradeLevel: c.gradeLevel || 'الصف الأول الثانوي'
+      }));
+
+      const students = (Array.isArray(stateObj.students) ? stateObj.students : []).map(st => {
+        const cls = classes.find(c => c.id === st.classId);
+        return {
+          ...st,
+          schoolId: st.schoolId || (cls ? cls.schoolId : 'sch_sadfa_boys')
+        };
+      });
+
+      const contents = (Array.isArray(stateObj.contents) ? stateObj.contents : []).map(ct => {
+        const cls = classes.find(c => c.id === ct.classId);
+        return {
+          ...ct,
+          schoolId: ct.schoolId || (cls ? cls.schoolId : 'sch_sadfa_boys')
+        };
+      });
+
+      const subTeachers = (Array.isArray(stateObj.subTeachers) ? stateObj.subTeachers : []).map(t => ({
+        ...t,
+        schoolId: t.schoolId || 'sch_sadfa_boys'
+      }));
+
+      const activeSchool = schools.find(s => s.id === activeSchoolId) || schools[0];
+      const mergedSettings = {
+        ...activeSchool.settings,
+        teacherUsername: activeSchool.adminUsername,
+        teacherPassword: activeSchool.adminPassword
+      };
+
+      return {
+        schools,
+        activeSchoolId,
+        settings: mergedSettings,
+        subTeachers,
+        classes,
+        students,
+        contents,
+        attendance: stateObj.attendance && typeof stateObj.attendance === 'object' ? stateObj.attendance : {},
+        grades: stateObj.grades && typeof stateObj.grades === 'object' ? stateObj.grades : {},
+        monthlyExams: stateObj.monthlyExams && typeof stateObj.monthlyExams === 'object' ? stateObj.monthlyExams : {}
+      };
+    }
+
+    function getSchoolRecord(schoolId = null) {
+      const targetId = schoolId || uiState.loginSelectedSchoolId || appData.activeSchoolId || (appData.schools && appData.schools[0] && appData.schools[0].id);
+      const found = (appData.schools || []).find(sc => sc.id === targetId) || (appData.schools && appData.schools[0]);
+      if (found) {
+        return {
+          ...found,
+          settings: {
+            ...DEFAULT_STATE.settings,
+            ...appData.settings,
+            ...(found.settings || {}),
+            teacherUsername: found.adminUsername,
+            teacherPassword: found.adminPassword
+          }
+        };
+      }
+      return {
+        id: 'sch_sadfa_boys',
+        code: 'sadfa_boys',
+        adminUsername: appData.settings.teacherUsername,
+        adminPassword: appData.settings.teacherPassword,
+        settings: { ...DEFAULT_STATE.settings, ...appData.settings }
+      };
+    }
+
+    function setActiveSchoolContext(schoolId) {
+      const schoolRec = getSchoolRecord(schoolId);
+      if (!schoolRec) return;
+      appData.activeSchoolId = schoolRec.id;
+      appData.settings = {
+        ...schoolRec.settings,
+        teacherUsername: schoolRec.adminUsername,
+        teacherPassword: schoolRec.adminPassword
+      };
+    }
+
     function loadState() {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
           const parsed = JSON.parse(saved);
-          parsed.settings = { ...DEFAULT_STATE.settings, ...(parsed.settings || {}) };
-          parsed.subTeachers = Array.isArray(parsed.subTeachers) ? parsed.subTeachers : [];
-          parsed.monthlyExams = parsed.monthlyExams || {};
-          parsed.grades = parsed.grades || {};
-          parsed.attendance = parsed.attendance || {};
-          parsed.contents = parsed.contents || [];
-          parsed.classes = (parsed.classes && parsed.classes.length > 0 ? parsed.classes : DEFAULT_STATE.classes).map(c => ({
-            ...c,
-            gradeLevel: c.gradeLevel || 'الصف الأول الثانوي'
-          }));
-          parsed.students = parsed.students || [];
-          return parsed;
+          return normalizeSchoolsInState(parsed);
         }
       } catch (e) {
         console.error('Error loading state from localStorage:', e);
       }
-      return JSON.parse(JSON.stringify(DEFAULT_STATE));
+      return normalizeSchoolsInState(JSON.parse(JSON.stringify(DEFAULT_STATE)));
     }
 
     let appData = loadState();
@@ -592,19 +779,7 @@
     function applyRemotePortalState(remoteState) {
       if (!remoteState || typeof remoteState !== 'object') return;
       try {
-        const merged = {
-          settings: { ...DEFAULT_STATE.settings, ...(remoteState.settings || {}) },
-          subTeachers: Array.isArray(remoteState.subTeachers) ? remoteState.subTeachers : [],
-          classes: (Array.isArray(remoteState.classes) && remoteState.classes.length > 0 ? remoteState.classes : DEFAULT_STATE.classes).map(c => ({
-            ...c,
-            gradeLevel: c.gradeLevel || 'الصف الأول الثانوي'
-          })),
-          students: Array.isArray(remoteState.students) ? remoteState.students : [],
-          contents: Array.isArray(remoteState.contents) ? remoteState.contents : [],
-          attendance: remoteState.attendance && typeof remoteState.attendance === 'object' ? remoteState.attendance : {},
-          grades: remoteState.grades && typeof remoteState.grades === 'object' ? remoteState.grades : {},
-          monthlyExams: remoteState.monthlyExams && typeof remoteState.monthlyExams === 'object' ? remoteState.monthlyExams : {}
-        };
+        const merged = normalizeSchoolsInState(remoteState);
         appData = merged;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
         const accessibleClasses = getAccessibleClasses();
@@ -618,6 +793,7 @@
     }
 
     function saveState() {
+      appData = normalizeSchoolsInState(appData);
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
       } catch (e) {
@@ -876,6 +1052,7 @@
 
     const uiState = {
       currentUser: null,
+      loginSelectedSchoolId: 'sch_sadfa_boys',
       showLoginPassword: false,
       studentViewMode: 'content',
       studentTab: 'classwork',
@@ -898,16 +1075,51 @@
     /*************************************************************************
      * 2. دوال المساعدة والترتيب الأبجدي وحساب التواريخ والدرجات (صفر / غ)
      *************************************************************************/
+    function getCurrentSchoolId() {
+      if (uiState.currentUser && uiState.currentUser.schoolId) {
+        return uiState.currentUser.schoolId;
+      }
+      return appData.activeSchoolId || 'sch_sadfa_boys';
+    }
+
+    function getCurrentSchoolSettings() {
+      const schoolRec = getSchoolRecord(getCurrentSchoolId());
+      return schoolRec ? schoolRec.settings : appData.settings;
+    }
+
+    function getCurrentSchoolClasses() {
+      const schId = getCurrentSchoolId();
+      return appData.classes.filter(c => (c.schoolId || 'sch_sadfa_boys') === schId);
+    }
+
+    function getCurrentSchoolStudents() {
+      const schId = getCurrentSchoolId();
+      const schoolClassIds = new Set(getCurrentSchoolClasses().map(c => c.id));
+      return appData.students.filter(s => (s.schoolId || (schoolClassIds.has(s.classId) ? schId : 'sch_sadfa_boys')) === schId);
+    }
+
+    function getCurrentSchoolContents() {
+      const schId = getCurrentSchoolId();
+      const schoolClassIds = new Set(getCurrentSchoolClasses().map(c => c.id));
+      return appData.contents.filter(cnt => (cnt.schoolId || (schoolClassIds.has(cnt.classId) ? schId : 'sch_sadfa_boys')) === schId);
+    }
+
+    function getCurrentSchoolSubTeachers() {
+      const schId = getCurrentSchoolId();
+      return (appData.subTeachers || []).filter(t => (t.schoolId || 'sch_sadfa_boys') === schId);
+    }
+
     function isSuperAdmin() {
       return uiState.currentUser && uiState.currentUser.role === 'teacher' && uiState.currentUser.isSuperAdmin === true;
     }
 
     function getActiveTeacherProfile() {
       if (!uiState.currentUser || uiState.currentUser.role !== 'teacher') return null;
+      const schSettings = getCurrentSchoolSettings();
       if (uiState.currentUser.isSuperAdmin) {
         return {
-          name: appData.settings.teacherName,
-          subjectName: appData.settings.subjectName,
+          name: schSettings.teacherName,
+          subjectName: schSettings.subjectName,
           isSuperAdmin: true
         };
       }
@@ -924,13 +1136,14 @@
     }
 
     function getAccessibleClasses() {
+      const schoolClasses = getCurrentSchoolClasses();
       if (isSuperAdmin()) {
-        return appData.classes;
+        return schoolClasses;
       }
       const profile = getActiveTeacherProfile();
       if (!profile) return [];
       const allowedIds = profile.classIds || [];
-      return appData.classes.filter(c => allowedIds.includes(c.id));
+      return schoolClasses.filter(c => allowedIds.includes(c.id));
     }
 
     function parseGradeToken(rawVal) {
@@ -1142,12 +1355,27 @@
       const examsTotal = Number(((octTok.type === 'number' ? octTok.num : 0) + (novTok.type === 'number' ? novTok.num : 0)).toFixed(2));
 
       return {
-        quizSum, quizCount, quizAvg,
-        hwSum, hwCount, hwAvg,
-        behSum, behCount, behAvg,
-        totalFinal, hasAnyGrade,
-        octVal, novVal, hasAnyExam, examsTotal
+        quizAvg,
+        quizCount,
+        hwAvg,
+        hwCount,
+        behAvg,
+        behCount,
+        totalFinal,
+        hasAnyGrade,
+        octVal,
+        novVal,
+        hasAnyExam,
+        examsTotal
       };
+    }
+
+    function formatSheetTotalDisplay(qTok, hTok, bTok) {
+      const hasAny = qTok.type !== 'empty' || hTok.type !== 'empty' || bTok.type !== 'empty';
+      if (!hasAny) return '-';
+      const sum = Number((qTok.num + hTok.num + bTok.num).toFixed(2));
+      if (sum === 0) return 'صفر';
+      return String(sum);
     }
 
     function getStudentAttendanceStats(studentId, classId) {
@@ -1168,11 +1396,12 @@
      * 4. الطباعة الفورية وتصدير ملف PDF حقيقي غير فارغ
      *************************************************************************/
     function openDirectPrintPreview(weekNumbers, rangeTitle, includeTermAvgAndExams) {
-      const s = appData.settings;
+      const s = getCurrentSchoolSettings();
       const profile = getActiveTeacherProfile();
-      const currentClass = appData.classes.find(c => c.id === uiState.selectedClassId) || appData.classes[0];
+      const schoolClasses = getCurrentSchoolClasses();
+      const currentClass = schoolClasses.find(c => c.id === uiState.selectedClassId) || schoolClasses[0] || appData.classes[0];
       const classStudents = sortStudentsAlphabetically(
-        appData.students.filter(st => st.classId === uiState.selectedClassId)
+        getCurrentSchoolStudents().filter(st => st.classId === currentClass.id)
       );
       const targetWeeks = weekNumbers.map(w => ({
         num: w,
@@ -1180,48 +1409,54 @@
         date: getWeekSaturdayDate(s.studyStartDate, w)
       }));
 
-      // حساب ارتفاع الصف المناسب ليمتلئ كامل ارتفاع ورقة A4 بدون فراغ كبير بالأسفل
-      const availableBodyPx = 835;
+      const dataColsCount = (targetWeeks.length * 4) + (includeTermAvgAndExams ? 7 : 0);
+      const seqPct = 2.8;
+      const namePct = includeTermAvgAndExams ? 17.8 : (targetWeeks.length >= 5 ? 19.6 : 21.8);
+      const singleDataColPct = ((100 - seqPct - namePct) / Math.max(1, dataColsCount)).toFixed(4);
+
+      const availableBodyPx = 860;
       const count = Math.max(1, classStudents.length);
-      const computedRowHeight = Math.max(24, Math.min(54, Math.floor(availableBodyPx / count)));
-      const nameColWidth = includeTermAvgAndExams ? '96px' : '125px';
+      const computedRowHeight = Math.max(20, Math.min(44, Math.floor(availableBodyPx / count)));
+      const gradeFontSize = includeTermAvgAndExams ? '8.5px' : (targetWeeks.length >= 5 ? '9.5px' : '10.8px');
+      const totalFontSize = includeTermAvgAndExams ? '9.5px' : (targetWeeks.length >= 5 ? '10.5px' : '11.8px');
+      const nameFontSize = includeTermAvgAndExams ? '7.8px' : '8.6px';
 
       const tableRowsHTML = classStudents.map((student, idx) => {
         const summary = includeTermAvgAndExams ? calculateStudentTermSummary(student.id) : null;
         const exams = appData.monthlyExams[student.id] || { oct: null, nov: null };
-        const octVal = (exams.oct !== null && exams.oct !== '') ? exams.oct : '-';
-        const novVal = (exams.nov !== null && exams.nov !== '') ? exams.nov : '-';
+        const octTok = parseGradeToken(exams.oct);
+        const novTok = parseGradeToken(exams.nov);
 
         const weekCells = targetWeeks.map((w, wIdx) => {
           const rec = appData.grades[`${student.id}_${w.num}`] || { quiz: null, hw: null, behavior: null };
           const qTok = parseGradeToken(rec.quiz);
           const hTok = parseGradeToken(rec.hw);
           const bTok = parseGradeToken(rec.behavior);
-          const hasAny = qTok.type !== 'empty' || hTok.type !== 'empty' || bTok.type !== 'empty';
-          const sum = hasAny ? Number((qTok.num + hTok.num + bTok.num).toFixed(2)) : '-';
-          const sepStyle = wIdx > 0 ? 'border-right:2px solid #000;' : '';
+          const sumDisplay = formatSheetTotalDisplay(qTok, hTok, bTok);
+          const sepClass = wIdx > 0 ? 'week-sep' : '';
+          const sepStyle = wIdx > 0 ? 'border-right:1.6px solid #000;' : '';
           return `
-            <td style="${sepStyle}padding:1px 0;text-align:center;">${qTok.display}</td>
-            <td style="padding:1px 0;text-align:center;">${hTok.display}</td>
-            <td style="padding:1px 0;text-align:center;">${bTok.display}</td>
-            <td style="font-weight:900;background:#f1f5f9;padding:1px 0;text-align:center;">${sum}</td>
+            <td class="grade-cell ${sepClass}" style="width:${singleDataColPct}%;${sepStyle}padding:0;text-align:center;font-size:${gradeFontSize};font-weight:900;color:${qTok.type === 'absent' ? '#dc2626' : '#1d4ed8'};">${qTok.display}</td>
+            <td class="grade-cell" style="width:${singleDataColPct}%;padding:0;text-align:center;font-size:${gradeFontSize};font-weight:900;color:${hTok.type === 'absent' ? '#dc2626' : '#1d4ed8'};">${hTok.display}</td>
+            <td class="grade-cell" style="width:${singleDataColPct}%;padding:0;text-align:center;font-size:${gradeFontSize};font-weight:900;color:${bTok.type === 'absent' ? '#dc2626' : '#1d4ed8'};">${bTok.display}</td>
+            <td class="total-cell" style="width:${singleDataColPct}%;font-weight:900;background:#e0f2fe;padding:0;text-align:center;font-size:${totalFontSize};color:#dc2626;">${sumDisplay}</td>
           `;
         }).join('');
 
         const extraCells = includeTermAvgAndExams && summary ? `
-          <td style="border-right:2.5px solid #000;font-weight:800;background:#ecfdf5;padding:1px 0;">${summary.quizCount > 0 ? summary.quizAvg : '-'}</td>
-          <td style="font-weight:800;background:#ecfdf5;padding:1px 0;">${summary.hwCount > 0 ? summary.hwAvg : '-'}</td>
-          <td style="font-weight:800;background:#ecfdf5;padding:1px 0;">${summary.behCount > 0 ? summary.behAvg : '-'}</td>
-          <td style="font-weight:900;background:#a7f3d0;padding:1px 0;">${summary.hasAnyGrade ? summary.totalFinal : '-'}</td>
-          <td style="border-right:2.5px solid #000;font-weight:800;background:#fffbeb;padding:1px 0;">${octVal}</td>
-          <td style="font-weight:800;background:#fffbeb;padding:1px 0;">${novVal}</td>
-          <td style="font-weight:900;background:#fde68a;padding:1px 0;">${summary.hasAnyExam ? summary.examsTotal : '-'}</td>
+          <td class="grade-cell week-sep" style="width:${singleDataColPct}%;border-right:2px solid #000;font-weight:900;background:#eff6ff;padding:0;font-size:${gradeFontSize};color:#1d4ed8;">${summary.quizCount > 0 ? summary.quizAvg : '-'}</td>
+          <td class="grade-cell" style="width:${singleDataColPct}%;font-weight:900;background:#eff6ff;padding:0;font-size:${gradeFontSize};color:#1d4ed8;">${summary.hwCount > 0 ? summary.hwAvg : '-'}</td>
+          <td class="grade-cell" style="width:${singleDataColPct}%;font-weight:900;background:#eff6ff;padding:0;font-size:${gradeFontSize};color:#1d4ed8;">${summary.behCount > 0 ? summary.behAvg : '-'}</td>
+          <td class="total-cell" style="width:${singleDataColPct}%;font-weight:900;background:#e0f2fe;padding:0;font-size:${totalFontSize};color:#dc2626;">${summary.hasAnyGrade ? summary.totalFinal : '-'}</td>
+          <td class="grade-cell week-sep" style="width:${singleDataColPct}%;border-right:2px solid #000;font-weight:900;background:#fffbeb;padding:0;font-size:${gradeFontSize};color:${octTok.type === 'absent' ? '#dc2626' : '#1d4ed8'};">${octTok.type !== 'empty' ? octTok.display : '-'}</td>
+          <td class="grade-cell" style="width:${singleDataColPct}%;font-weight:900;background:#fffbeb;padding:0;font-size:${gradeFontSize};color:${novTok.type === 'absent' ? '#dc2626' : '#1d4ed8'};">${novTok.type !== 'empty' ? novTok.display : '-'}</td>
+          <td class="total-cell" style="width:${singleDataColPct}%;font-weight:900;background:#e0f2fe;padding:0;font-size:${totalFontSize};color:#dc2626;">${summary.hasAnyExam ? summary.examsTotal : '-'}</td>
         ` : '';
 
         return `
           <tr style="height:${computedRowHeight}px;">
-            <td class="col-seq" style="font-weight:800;width:18px;text-align:center;">${idx + 1}</td>
-            <td class="col-name" style="width:${nameColWidth};max-width:${nameColWidth};text-align:right;font-weight:800;padding:2px 4px;line-height:1.25;white-space:normal;word-break:break-word;">${student.name}</td>
+            <td class="col-seq" style="font-weight:900;width:${seqPct}%;text-align:center;font-size:9px;color:#000000;background:#f8fafc;">${idx + 1}</td>
+            <td class="col-name" style="width:${namePct}%;text-align:right;font-weight:800;font-size:${nameFontSize};color:#000000;padding:1px 3px;line-height:1.1;white-space:normal;word-break:break-word;overflow:hidden;">${student.name}</td>
             ${weekCells}
             ${extraCells}
           </tr>
@@ -1229,63 +1464,63 @@
       }).join('');
 
       const weekHeadersTop = targetWeeks.map((w, wIdx) => `
-        <th colspan="4" ${wIdx > 0 ? 'style="border-right:2px solid #000;"' : ''}>
-          <div>${w.label}</div>
-          <div style="font-size:7px;font-weight:700;" dir="ltr">${w.date}</div>
+        <th colspan="4" ${wIdx > 0 ? 'class="week-sep" style="border-right:1.8px solid #000;padding:1.5px 0;"' : 'style="padding:1.5px 0;"'}>
+          <div style="font-size:8.5px;font-weight:900;color:#000;">${w.label}</div>
+          <div style="font-size:7px;font-weight:800;color:#1e3a8a;" dir="ltr">${w.date}</div>
         </th>
       `).join('');
 
       const weekHeadersSub = targetWeeks.map((w, wIdx) => `
-        <th ${wIdx > 0 ? 'style="border-right:2px solid #000;"' : ''}>تقييم</th>
-        <th>واجب</th>
-        <th>سلوك</th>
-        <th style="background:#e2e8f0;">مجموع</th>
+        <th style="width:${singleDataColPct}%;${wIdx > 0 ? 'border-right:1.6px solid #000;' : ''}padding:1px 0;" ${wIdx > 0 ? 'class="week-sep"' : ''}>تقييم</th>
+        <th style="width:${singleDataColPct}%;padding:1px 0;">واجب</th>
+        <th style="width:${singleDataColPct}%;padding:1px 0;">سلوك</th>
+        <th style="width:${singleDataColPct}%;background:#bae6fd;color:#0c4a6e;padding:1px 0;font-weight:900;">مجموع</th>
       `).join('');
 
       const weekHeadersMax = targetWeeks.map((w, wIdx) => `
-        <th ${wIdx > 0 ? 'style="border-right:2px solid #000;"' : ''}>15</th>
-        <th>15</th>
-        <th>10</th>
-        <th style="background:#cbd5e1;">40</th>
+        <th style="width:${singleDataColPct}%;${wIdx > 0 ? 'border-right:1.6px solid #000;' : ''}padding:0.5px 0;font-size:8px;color:#1d4ed8;" ${wIdx > 0 ? 'class="week-sep"' : ''}>15</th>
+        <th style="width:${singleDataColPct}%;padding:0.5px 0;font-size:8px;color:#1d4ed8;">15</th>
+        <th style="width:${singleDataColPct}%;padding:0.5px 0;font-size:8px;color:#1d4ed8;">10</th>
+        <th style="width:${singleDataColPct}%;background:#7dd3fc;color:#0c4a6e;padding:0.5px 0;font-size:8.5px;font-weight:900;">40</th>
       `).join('');
 
       const extraTop = includeTermAvgAndExams ? `
-        <th colspan="4" style="border-right:2.5px solid #000;background:#d1fae5;">متوسط الفصل الأول</th>
-        <th colspan="3" style="border-right:2.5px solid #000;background:#fef3c7;">اختبارات الشهور</th>
+        <th colspan="4" class="week-sep" style="border-right:2px solid #000;background:#dbeafe;padding:1.5px 0;">متوسط الفصل الأول</th>
+        <th colspan="3" class="week-sep" style="border-right:2px solid #000;background:#fef3c7;padding:1.5px 0;">اختبارات الشهور</th>
       ` : '';
 
       const extraSub = includeTermAvgAndExams ? `
-        <th style="border-right:2.5px solid #000;background:#ecfdf5;">تقييم</th>
-        <th style="background:#ecfdf5;">واجب</th>
-        <th style="background:#ecfdf5;">سلوك</th>
-        <th style="background:#a7f3d0;">المجموع</th>
-        <th style="border-right:2.5px solid #000;background:#fffbeb;">أكتوبر</th>
-        <th style="background:#fffbeb;">نوفمبر</th>
-        <th style="background:#fde68a;">المجموع</th>
+        <th class="week-sep" style="width:${singleDataColPct}%;border-right:2px solid #000;background:#eff6ff;padding:1px 0;">تقييم</th>
+        <th style="width:${singleDataColPct}%;background:#eff6ff;padding:1px 0;">واجب</th>
+        <th style="width:${singleDataColPct}%;background:#eff6ff;padding:1px 0;">سلوك</th>
+        <th style="width:${singleDataColPct}%;background:#bae6fd;color:#0c4a6e;padding:1px 0;">المجموع</th>
+        <th class="week-sep" style="width:${singleDataColPct}%;border-right:2px solid #000;background:#fffbeb;padding:1px 0;">أكتوبر</th>
+        <th style="width:${singleDataColPct}%;background:#fffbeb;padding:1px 0;">نوفمبر</th>
+        <th style="width:${singleDataColPct}%;background:#bae6fd;color:#0c4a6e;padding:1px 0;">المجموع</th>
       ` : '';
 
       const extraMax = includeTermAvgAndExams ? `
-        <th style="border-right:2.5px solid #000;background:#ecfdf5;">15</th>
-        <th style="background:#ecfdf5;">15</th>
-        <th style="background:#ecfdf5;">10</th>
-        <th style="background:#a7f3d0;">40</th>
-        <th style="border-right:2.5px solid #000;background:#fffbeb;">15</th>
-        <th style="background:#fffbeb;">15</th>
-        <th style="background:#fde68a;">30</th>
+        <th class="week-sep" style="width:${singleDataColPct}%;border-right:2px solid #000;background:#eff6ff;padding:0.5px 0;color:#1d4ed8;">15</th>
+        <th style="width:${singleDataColPct}%;background:#eff6ff;padding:0.5px 0;color:#1d4ed8;">15</th>
+        <th style="width:${singleDataColPct}%;background:#eff6ff;padding:0.5px 0;color:#1d4ed8;">10</th>
+        <th style="width:${singleDataColPct}%;background:#7dd3fc;color:#0c4a6e;padding:0.5px 0;font-weight:900;">40</th>
+        <th class="week-sep" style="width:${singleDataColPct}%;border-right:2px solid #000;background:#fffbeb;padding:0.5px 0;color:#1d4ed8;">15</th>
+        <th style="width:${singleDataColPct}%;background:#fffbeb;padding:0.5px 0;color:#1d4ed8;">15</th>
+        <th style="width:${singleDataColPct}%;background:#7dd3fc;color:#0c4a6e;padding:0.5px 0;font-weight:900;">30</th>
       ` : '';
 
       openModal(`
         <div class="space-y-4" dir="rtl">
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
             <div>
-              <h3 class="font-extrabold text-slate-900 text-base">معاينة الطباعة الرسمية (Portrait A4)</h3>
-              <p class="text-xs text-slate-500">تم ضبط عرض خانة الاسم وتمديد صفوف الطلاب لملء كامل الصفحة دون تداخل.</p>
+              <h3 class="font-extrabold text-slate-900 text-base">معاينة الطباعة الرسمية (صفحة A4 واحدة كاملة 100%)</h3>
+              <p class="text-xs text-slate-500">مضبوطة تلقائياً في ورقة A4 واحدة بدون أي قص من اليسار أو انتقال لورقة ثانية.</p>
             </div>
             <div class="flex items-center gap-2">
-              <button type="button" onclick="triggerImmediatePrint()"
+              <button type="button" onclick="triggerDirectSheetCanvasPrint([${weekNumbers.join(',')}], '${rangeTitle.replace(/'/g, "\\'")}', ${includeTermAvgAndExams})"
                 class="px-4 py-2 bg-brand-700 hover:bg-brand-800 text-white text-xs font-extrabold rounded-xl flex items-center gap-1.5 shadow-sm">
                 <i data-lucide="printer" class="w-4 h-4"></i>
-                <span>طباعة الآن</span>
+                <span>طباعة الآن (ورقة واحدة)</span>
               </button>
               <button type="button" onclick="forceCloseModal()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">
                 <i data-lucide="x" class="w-4 h-4"></i>
@@ -1293,54 +1528,54 @@
             </div>
           </div>
 
-          <div id="printable-sheet-box" class="border-2 border-slate-900 rounded-xl p-2.5 bg-white text-slate-950" style="display:flex;flex-direction:column;justify-content:space-between;min-height:1030px;">
+          <div id="printable-sheet-box" class="border-2 border-slate-950 rounded-xl p-2.5 bg-white text-black" style="display:flex;flex-direction:column;justify-content:space-between;min-height:1030px;">
             <div>
-              <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #0f172a;padding-bottom:6px;margin-bottom:6px;gap:6px;">
-                <div style="font-size:9.5px;font-weight:900;line-height:1.35;text-align:right;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.5px solid #000000;padding-bottom:4px;margin-bottom:4px;gap:6px;">
+                <div style="font-size:9.5px;font-weight:900;line-height:1.3;text-align:right;color:#000;">
                   <div>${s.directorate}</div>
                   <div>${s.administration}</div>
                   <div>${s.schoolName}</div>
                 </div>
                 <div style="text-align:center;flex:1;">
-                  <div style="font-size:11.5px;font-weight:900;border:1px solid #0f172a;border-radius:8px;padding:3px 8px;display:inline-block;background:#f8fafc;">
+                  <div style="font-size:11.5px;font-weight:900;border:1.5px solid #000000;border-radius:8px;padding:2px 8px;display:inline-block;background:#f8fafc;color:#000;">
                     سجل رصد درجات ${currentClass.fullName} — مادة ${profile ? profile.subjectName : s.subjectName}
                   </div>
-                  <div style="font-size:8.5px;font-weight:700;color:#475569;margin-top:2px;">
+                  <div style="font-size:8.5px;font-weight:800;color:#1e293b;margin-top:2px;">
                     ${rangeTitle} • العام الدراسي ${s.academicYear}
                   </div>
                 </div>
-                <div style="font-size:9px;font-weight:800;text-align:left;">
+                <div style="font-size:9px;font-weight:900;text-align:left;color:#000;">
                   <div>${currentClass.gradeLevel || s.gradeLevel}</div>
                   <div>عدد الطلاب: ${classStudents.length}</div>
                 </div>
               </div>
 
-              <div style="overflow-x:auto;">
-                <table class="official-sheet ${includeTermAvgAndExams ? 'dense-sheet' : ''}" style="width:100%;table-layout:fixed;border-collapse:collapse;text-align:center;font-size:${includeTermAvgAndExams ? '7px' : '8px'};">
+              <div class="print-table-wrapper" style="width:100%;">
+                <table class="official-sheet ${includeTermAvgAndExams ? 'dense-sheet' : ''}" style="width:100%;table-layout:fixed;border-collapse:collapse;text-align:center;">
                   <thead>
-                    <tr style="background:#f1f5f9;font-weight:900;">
-                      <th rowspan="3" class="col-seq" style="border:1px solid #0f172a;padding:2px;width:18px;">م</th>
-                      <th rowspan="3" class="col-name" style="border:1px solid #0f172a;padding:2px 4px;text-align:right;width:${nameColWidth};">الاسم</th>
+                    <tr style="background:#e2e8f0;font-weight:900;color:#000;">
+                      <th rowspan="3" class="col-seq" style="border:1px solid #000;padding:1.5px;width:${seqPct}%;font-size:9px;">م</th>
+                      <th rowspan="3" class="col-name" style="border:1px solid #000;padding:1.5px 3px;text-align:right;width:${namePct}%;font-size:9.5px;">الاسم</th>
                       ${weekHeadersTop}
                       ${extraTop}
                     </tr>
-                    <tr style="background:#f8fafc;font-weight:800;font-size:6.8px;">
+                    <tr style="background:#f1f5f9;font-weight:900;font-size:7px;color:#000;">
                       ${weekHeadersSub}
                       ${extraSub}
                     </tr>
-                    <tr style="background:#e2e8f0;font-weight:900;font-size:7.5px;">
+                    <tr style="background:#e2e8f0;font-weight:900;font-size:8px;color:#000;">
                       ${weekHeadersMax}
                       ${extraMax}
                     </tr>
                   </thead>
                   <tbody>
-                    ${tableRowsHTML || `<tr><td colspan="20" style="border:1px solid #0f172a;padding:12px;">لا يوجد طلاب مسجلون في هذا الفصل</td></tr>`}
+                    ${tableRowsHTML || `<tr><td colspan="22" style="border:1px solid #000;padding:12px;">لا يوجد طلاب مسجلون في هذا الفصل</td></tr>`}
                   </tbody>
                 </table>
               </div>
             </div>
 
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:6px;border-top:1.5px solid #0f172a;font-size:10px;font-weight:900;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px;padding-top:4px;border-top:1.5px solid #000000;font-size:10px;font-weight:900;color:#000;">
               <div>معلم المادة / ${profile ? profile.name : s.teacherName}</div>
               <div>مدير المدرسة / ${s.principalName}</div>
             </div>
@@ -1380,15 +1615,54 @@
       }, 100);
     }
 
-    function exportOfficialSheetPDF(weekNumbers, rangeTitle, includeTermAvgAndExams) {
-      const s = appData.settings;
-      const profile = getActiveTeacherProfile();
-      const currentClass = appData.classes.find(c => c.id === uiState.selectedClassId) || appData.classes[0];
-      const classStudents = sortStudentsAlphabetically(
-        appData.students.filter(st => st.classId === uiState.selectedClassId)
-      );
+    function triggerDirectSheetCanvasPrint(weekNumbers, rangeTitle, includeTermAvgAndExams) {
+      const imgDataUrl = renderOfficialSheetCanvasDataUrl(weekNumbers, rangeTitle, includeTermAvgAndExams);
+      if (!imgDataUrl) {
+        triggerImmediatePrint();
+        return;
+      }
 
-      showToast('جاري إنشاء ملف PDF عالي الدقة...', 'info');
+      let printZone = document.getElementById('dedicated-print-zone');
+      if (!printZone) {
+        printZone = document.createElement('div');
+        printZone.id = 'dedicated-print-zone';
+        document.body.appendChild(printZone);
+      }
+
+      const appEl = document.getElementById('app');
+      const modalBackdrop = document.getElementById('modal-backdrop');
+
+      printZone.innerHTML = `<img src="${imgDataUrl}" class="a4-canvas-print" alt="كشف الدرجات الرسمي" />`;
+      if (appEl) appEl.classList.add('no-print');
+      if (modalBackdrop) modalBackdrop.classList.add('no-print');
+
+      const imgEl = printZone.querySelector('img');
+      const startPrint = () => {
+        setTimeout(() => {
+          window.print();
+          setTimeout(() => {
+            if (appEl) appEl.classList.remove('no-print');
+            if (modalBackdrop) modalBackdrop.classList.remove('no-print');
+            if (printZone) printZone.innerHTML = '';
+          }, 400);
+        }, 80);
+      };
+
+      if (imgEl && !imgEl.complete) {
+        imgEl.onload = startPrint;
+      } else {
+        startPrint();
+      }
+    }
+
+    function renderOfficialSheetCanvasDataUrl(weekNumbers, rangeTitle, includeTermAvgAndExams) {
+      const s = getCurrentSchoolSettings();
+      const profile = getActiveTeacherProfile();
+      const schoolClasses = getCurrentSchoolClasses();
+      const currentClass = schoolClasses.find(c => c.id === uiState.selectedClassId) || schoolClasses[0] || appData.classes[0];
+      const classStudents = sortStudentsAlphabetically(
+        getCurrentSchoolStudents().filter(st => st.classId === currentClass.id)
+      );
 
       try {
         const scale = 2.5;
@@ -1459,7 +1733,7 @@
           columns.push({ width: subW, type: 'week_sub', weekNum: w.num, field: 'quiz', topGroup: `${w.label} (${w.date})`, subTitle: 'تقييم', maxLabel: '15', weekStart: idx === 0, isWeekBoundary: true });
           columns.push({ width: subW, type: 'week_sub', weekNum: w.num, field: 'hw', topGroup: '', subTitle: 'واجب', maxLabel: '15' });
           columns.push({ width: subW, type: 'week_sub', weekNum: w.num, field: 'behavior', topGroup: '', subTitle: 'سلوك', maxLabel: '10' });
-          columns.push({ width: subW, type: 'week_total', weekNum: w.num, topGroup: '', subTitle: 'المجموع', maxLabel: '40', bg: '#f1f5f9' });
+          columns.push({ width: subW, type: 'week_total', weekNum: w.num, topGroup: '', subTitle: 'المجموع', maxLabel: '40', bg: '#e0f2fe' });
         });
 
         if (includeTermAvgAndExams) {
@@ -1467,12 +1741,12 @@
           columns.push({ width: avgW, type: 'avg_quiz', topGroup: 'متوسط الفصل الأول', subTitle: 'تقييم', maxLabel: '15', isWeekBoundary: true, bg: '#ecfdf5' });
           columns.push({ width: avgW, type: 'avg_hw', topGroup: '', subTitle: 'واجب', maxLabel: '15', bg: '#ecfdf5' });
           columns.push({ width: avgW, type: 'avg_beh', topGroup: '', subTitle: 'سلوك', maxLabel: '10', bg: '#ecfdf5' });
-          columns.push({ width: avgW, type: 'avg_total', topGroup: '', subTitle: 'المجموع', maxLabel: '40', bg: '#a7f3d0' });
+          columns.push({ width: avgW, type: 'avg_total', topGroup: '', subTitle: 'المجموع', maxLabel: '40', bg: '#e0f2fe' });
 
           const exW = 38;
           columns.push({ width: exW, type: 'exam_oct', topGroup: 'اختبارات الشهور', subTitle: 'أكتوبر', maxLabel: '15', isWeekBoundary: true, bg: '#fffbeb' });
           columns.push({ width: exW, type: 'exam_nov', topGroup: '', subTitle: 'نوفمبر', maxLabel: '15', bg: '#fffbeb' });
-          columns.push({ width: exW, type: 'exam_total', topGroup: '', subTitle: 'المجموع', maxLabel: '30', bg: '#fde68a' });
+          columns.push({ width: exW, type: 'exam_total', topGroup: '', subTitle: 'المجموع', maxLabel: '30', bg: '#e0f2fe' });
         }
 
         const rawSumW = columns.reduce((acc, c) => acc + c.width, 0);
@@ -1508,7 +1782,6 @@
             curX = xLeft;
             idxCol++;
           } else {
-            // تحديد عدد الأعمدة المدمجة في الترويسة العلوية (4 للأسبوع أو المتوسط، 3 للاختبارات)
             const spanCount = col.type === 'exam_oct' ? 3 : 4;
             let groupW = 0;
             for (let k = 0; k < spanCount && (idxCol + k) < columns.length; k++) {
@@ -1516,8 +1789,7 @@
             }
             const groupLeftX = curX - groupW;
 
-            // رسم الخانة العلوية المدمجة بالكامل بدون خطوط تقسيم داخلية
-            ctx.fillStyle = col.bg || '#dbeafe';
+            ctx.fillStyle = '#dbeafe';
             ctx.fillRect(groupLeftX, tableTopY, groupW, r1H);
             ctx.strokeStyle = '#0f172a';
             ctx.lineWidth = 2.2;
@@ -1528,7 +1800,6 @@
             ctx.font = 'bold 11.5px Cairo, sans-serif';
             ctx.fillText(col.topGroup || '', groupLeftX + groupW / 2, tableTopY + 19);
 
-            // رسم الصف الثاني والثالث الفرعيين لكل عمود داخل المجموعة
             let subCurX = curX;
             for (let k = 0; k < spanCount && (idxCol + k) < columns.length; k++) {
               const subCol = columns[idxCol + k];
@@ -1556,7 +1827,6 @@
               subCurX = subLeft;
             }
 
-            // رسم إطار خارجي سميك للمجموعة بالكامل لتمييز الحدود الفاصلة بين الأسابيع
             ctx.strokeStyle = '#0f172a';
             ctx.lineWidth = 2.2;
             ctx.strokeRect(groupLeftX, tableTopY, groupW, headTotalH);
@@ -1566,7 +1836,6 @@
           }
         }
 
-        // تمديد ارتفاع صفوف الطلاب لتمتلئ كامل الصفحة حتى التذييل دون ترك ربع الصفحة فارغاً
         const bodyTopY = tableTopY + headTotalH;
         const footerAreaH = 65;
         const availableBodyH = pageH - bodyTopY - footerAreaH;
@@ -1595,7 +1864,6 @@
               textVal = String(idx + 1);
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'name') {
-              // قصّ الرسم داخل حدود عمود الاسم والتفاف الاسم الطويل على سطرين لمنع أي تداخل نهائياً
               ctx.save();
               ctx.beginPath();
               ctx.rect(xLeft + 3, yRow + 2, col.width - 6, rowH - 4);
@@ -1635,54 +1903,61 @@
               const tok = parseGradeToken(rec[col.field]);
               textVal = tok.display;
               ctx.textAlign = 'center';
-              ctx.fillStyle = tok.type === 'absent' ? '#dc2626' : '#0f172a';
-              ctx.font = 'bold 11.5px Cairo, sans-serif';
+              ctx.fillStyle = tok.type === 'absent' ? '#dc2626' : '#1d4ed8';
+              ctx.font = 'bold 12px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'week_total') {
               const rec = appData.grades[`${student.id}_${col.weekNum}`] || {};
               const qTok = parseGradeToken(rec.quiz);
               const hTok = parseGradeToken(rec.hw);
               const bTok = parseGradeToken(rec.behavior);
-              const hasAny = qTok.type !== 'empty' || hTok.type !== 'empty' || bTok.type !== 'empty';
-              textVal = hasAny ? String(Number((qTok.num + hTok.num + bTok.num).toFixed(2))) : '-';
+              textVal = formatSheetTotalDisplay(qTok, hTok, bTok);
               ctx.textAlign = 'center';
-              ctx.font = 'bold 12px Cairo, sans-serif';
-              ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
+              ctx.fillStyle = '#dc2626';
+              ctx.font = '900 13.5px Cairo, sans-serif';
+              ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4.5);
             } else if (col.type === 'avg_quiz' && summary) {
               textVal = summary.quizCount > 0 ? String(summary.quizAvg) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 11px Cairo, sans-serif';
+              ctx.fillStyle = '#1d4ed8';
+              ctx.font = 'bold 11.5px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'avg_hw' && summary) {
               textVal = summary.hwCount > 0 ? String(summary.hwAvg) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 11px Cairo, sans-serif';
+              ctx.fillStyle = '#1d4ed8';
+              ctx.font = 'bold 11.5px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'avg_beh' && summary) {
               textVal = summary.behCount > 0 ? String(summary.behAvg) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 11px Cairo, sans-serif';
+              ctx.fillStyle = '#1d4ed8';
+              ctx.font = 'bold 11.5px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'avg_total' && summary) {
               textVal = summary.hasAnyGrade ? String(summary.totalFinal) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 11.5px Cairo, sans-serif';
-              ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
+              ctx.fillStyle = '#dc2626';
+              ctx.font = '900 13px Cairo, sans-serif';
+              ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4.5);
             } else if (col.type === 'exam_oct') {
               textVal = (exams.oct !== null && exams.oct !== undefined && exams.oct !== '') ? String(exams.oct) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 11px Cairo, sans-serif';
+              ctx.fillStyle = textVal === 'غ' ? '#dc2626' : '#1d4ed8';
+              ctx.font = 'bold 11.5px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'exam_nov') {
               textVal = (exams.nov !== null && exams.nov !== undefined && exams.nov !== '') ? String(exams.nov) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 11px Cairo, sans-serif';
+              ctx.fillStyle = textVal === 'غ' ? '#dc2626' : '#1d4ed8';
+              ctx.font = 'bold 11.5px Cairo, sans-serif';
               ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
             } else if (col.type === 'exam_total' && summary) {
               textVal = summary.hasAnyExam ? String(summary.examsTotal) : '-';
               ctx.textAlign = 'center';
-              ctx.font = 'bold 11.5px Cairo, sans-serif';
-              ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4);
+              ctx.fillStyle = '#dc2626';
+              ctx.font = '900 13px Cairo, sans-serif';
+              ctx.fillText(textVal, xLeft + col.width / 2, yRow + rowH / 2 + 4.5);
             }
 
             xCursor = xLeft;
@@ -1705,7 +1980,25 @@
         ctx.textAlign = 'left';
         ctx.fillText(`مدير المدرسة / ${s.principalName}`, marginX, footerY);
 
-        const imgDataUrl = canvas.toDataURL('image/png', 1.0);
+        return canvas.toDataURL('image/png', 1.0);
+      } catch (err) {
+        console.error('Sheet canvas render error:', err);
+        return null;
+      }
+    }
+
+    function exportOfficialSheetPDF(weekNumbers, rangeTitle, includeTermAvgAndExams) {
+      const schoolClasses = getCurrentSchoolClasses();
+      const currentClass = schoolClasses.find(c => c.id === uiState.selectedClassId) || schoolClasses[0] || appData.classes[0];
+
+      showToast('جاري إنشاء ملف PDF عالي الدقة...', 'info');
+
+      try {
+        const imgDataUrl = renderOfficialSheetCanvasDataUrl(weekNumbers, rangeTitle, includeTermAvgAndExams);
+        if (!imgDataUrl) {
+          showToast('حدث خطأ أثناء توليد ملف PDF، جرّب الطباعة المباشرة.', 'error');
+          return;
+        }
         const fileName = `كشف_درجات_${currentClass.name.replace('/', '-')}_أسبوع_${weekNumbers[0]}_إلى_${weekNumbers[weekNumbers.length - 1]}.pdf`;
 
         if (window.jspdf && window.jspdf.jsPDF) {
@@ -1732,7 +2025,7 @@
     }
 
     /*************************************************************************
-     * 5. شاشة تسجيل الدخول (Login View)
+     * 5. شاشة تسجيل الدخول وتسجيل المدارس الجديدة (Login & School Registration)
      *************************************************************************/
     function toggleLoginPasswordVisibility() {
       uiState.showLoginPassword = !uiState.showLoginPassword;
@@ -1747,10 +2040,195 @@
       }
     }
 
+    function handleLoginSchoolSelect(schoolId) {
+      uiState.loginSelectedSchoolId = schoolId;
+      setActiveSchoolContext(schoolId);
+      renderApp();
+    }
+
+    function openRegisterSchoolModal() {
+      openModal(`
+        <div class="space-y-4" dir="rtl">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2.5">
+              <div class="w-10 h-10 rounded-2xl bg-brand-100 text-brand-800 flex items-center justify-center">
+                <i data-lucide="school" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="font-extrabold text-slate-900 text-base">فتح مدرسة جديدة وتسجيل بياناتها وترويستها</h3>
+                <p class="text-xs text-slate-500">يُنشئ حساب أدمن مستقل للمدرسة وتظهر ترويسة المدرسة في جميع كشوفها وبطاقاتها.</p>
+              </div>
+            </div>
+            <button type="button" onclick="forceCloseModal()" class="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600">
+              <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+          </div>
+
+          <form onsubmit="handleRegisterNewSchool(event)" class="space-y-3.5 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block font-extrabold text-slate-700 mb-1">المديرية التعليمية</label>
+                <input id="reg-sch-directorate" type="text" required value="مديرية التربية والتعليم بأسيوط"
+                  class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" />
+              </div>
+              <div>
+                <label class="block font-extrabold text-slate-700 mb-1">الإدارة التعليمية</label>
+                <input id="reg-sch-admin-area" type="text" required placeholder="مثال: إدارة صدفا التعليمية"
+                  class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" />
+              </div>
+              <div>
+                <label class="block font-extrabold text-slate-700 mb-1">اسم المدرسة</label>
+                <input id="reg-sch-name" type="text" required placeholder="مثال: مدرسة النيل الثانوية"
+                  class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block font-extrabold text-slate-700 mb-1">اسم مدير المدرسة</label>
+                <input id="reg-sch-principal" type="text" required placeholder="مثال: أ / محمود عبد الله"
+                  class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" />
+              </div>
+              <div>
+                <label class="block font-extrabold text-slate-700 mb-1">اسم الأدمن / المعلم المسؤول</label>
+                <input id="reg-sch-admin-name" type="text" required placeholder="مثال: أ / سامح محمد"
+                  class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" />
+              </div>
+              <div>
+                <label class="block font-extrabold text-slate-700 mb-1">المادة الدراسية</label>
+                <input id="reg-sch-subject" type="text" required value="البرمجة والذكاء الاصطناعي"
+                  class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block font-extrabold text-slate-700 mb-1">الصف الدراسي الأساسي</label>
+                <select id="reg-sch-grade" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold">
+                  ${GRADE_LEVELS.map(gl => `<option value="${gl}">${gl}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="block font-extrabold text-slate-700 mb-1">العام الدراسي</label>
+                <input id="reg-sch-year" type="text" required value="2026 / 2027"
+                  class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" />
+              </div>
+              <div>
+                <label class="block font-extrabold text-slate-700 mb-1">تاريخ بداية الدراسة</label>
+                <input id="reg-sch-start" type="date" required value="2026-09-19"
+                  class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" />
+              </div>
+            </div>
+
+            <div class="bg-brand-50/70 border border-brand-200 rounded-2xl p-3.5 space-y-2.5">
+              <div class="font-extrabold text-brand-950">بيانات حساب أدمن المدرسة (لتسجيل الدخول وإدارة المدرسة):</div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">اسم مستخدم الأدمن</label>
+                  <input id="reg-sch-username" type="text" required placeholder="مثال: admin_nile"
+                    class="w-full px-3 py-2 bg-white border border-brand-200 rounded-xl font-mono font-bold" />
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">كلمة مرور الأدمن</label>
+                  <input id="reg-sch-password" type="text" required placeholder="1234"
+                    class="w-full px-3 py-2 bg-white border border-brand-200 rounded-xl font-mono font-bold" />
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">اسم أول فصل بالمدرسة</label>
+                  <input id="reg-sch-first-class" type="text" required value="فصل 1/1"
+                    class="w-full px-3 py-2 bg-white border border-brand-200 rounded-xl font-bold" />
+                </div>
+              </div>
+            </div>
+
+            <button type="submit"
+              class="w-full py-3 bg-brand-700 hover:bg-brand-800 text-white font-extrabold rounded-2xl shadow-md transition flex items-center justify-center gap-2 text-sm">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              <span>إنشاء المدرسة والدخول بحساب الأدمن الآن</span>
+            </button>
+          </form>
+        </div>
+      `);
+    }
+
+    function handleRegisterNewSchool(e) {
+      e.preventDefault();
+      const directorate = document.getElementById('reg-sch-directorate').value.trim();
+      const administration = document.getElementById('reg-sch-admin-area').value.trim();
+      const schoolName = document.getElementById('reg-sch-name').value.trim();
+      const principalName = document.getElementById('reg-sch-principal').value.trim();
+      const teacherName = document.getElementById('reg-sch-admin-name').value.trim();
+      const subjectName = document.getElementById('reg-sch-subject').value.trim();
+      const gradeLevel = document.getElementById('reg-sch-grade').value;
+      const academicYear = document.getElementById('reg-sch-year').value.trim();
+      const studyStartDate = document.getElementById('reg-sch-start').value;
+      const adminUsername = document.getElementById('reg-sch-username').value.trim();
+      const adminPassword = document.getElementById('reg-sch-password').value.trim();
+      const firstClassFull = document.getElementById('reg-sch-first-class').value.trim() || 'فصل 1/1';
+      const firstClassShort = firstClassFull.replace(/^فصل\s*/i, '').trim() || '1/1';
+
+      const existsAdmin = (appData.schools || []).some(sc => sc.adminUsername === adminUsername) ||
+        (appData.subTeachers || []).some(t => t.username === adminUsername) ||
+        appData.students.some(st => st.username === adminUsername);
+
+      if (existsAdmin) {
+        showToast('اسم مستخدم الأدمن مستخدم بالفعل، اختر اسماً آخر.', 'error');
+        return;
+      }
+
+      const newSchoolId = 'sch_' + Date.now();
+      const newClassId = 'cls_' + Date.now();
+
+      const newSchoolSettings = {
+        ...DEFAULT_STATE.settings,
+        directorate,
+        administration,
+        schoolName,
+        principalName,
+        teacherName,
+        subjectName,
+        gradeLevel,
+        academicYear,
+        studyStartDate,
+        teacherUsername: adminUsername,
+        teacherPassword: adminPassword
+      };
+
+      appData.schools = appData.schools || [];
+      appData.schools.push({
+        id: newSchoolId,
+        code: newSchoolId,
+        adminUsername,
+        adminPassword,
+        settings: newSchoolSettings
+      });
+
+      appData.classes.push({
+        id: newClassId,
+        schoolId: newSchoolId,
+        name: firstClassShort,
+        fullName: firstClassFull,
+        gradeLevel
+      });
+
+      setActiveSchoolContext(newSchoolId);
+      uiState.loginSelectedSchoolId = newSchoolId;
+      uiState.selectedGradeLevel = gradeLevel;
+      uiState.selectedClassId = newClassId;
+      uiState.currentUser = { role: 'teacher', isSuperAdmin: true, schoolId: newSchoolId };
+      uiState.teacherTab = 'basic';
+      saveState();
+      forceCloseModal();
+      showToast(`تم إنشاء (${schoolName}) وتفعيل حساب الأدمن بنجاح!`, 'success');
+      renderApp();
+    }
+
     function renderLoginScreen() {
-      const s = appData.settings;
+      const selectedSchool = getSchoolRecord(uiState.loginSelectedSchoolId);
+      const s = selectedSchool.settings;
       const cleanWaNumber = String(s.whatsappNumber || '201200000000').replace(/[^\d]/g, '');
-      const waLink = `https://wa.me/${cleanWaNumber}?text=${encodeURIComponent('السلام عليكم أستاذ مينا، أود الاستفسار بخصوص منصة المتابعة المدرسية.')}`;
+      const waLink = `https://wa.me/${cleanWaNumber}?text=${encodeURIComponent(`السلام عليكم، أود الاستفسار بخصوص ${s.schoolName}.`)}`;
+      const schoolsList = appData.schools || [];
 
       return `
         <div class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-brand-900 via-brand-800 to-slate-900">
@@ -1776,11 +2254,31 @@
               </div>
 
               <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">منصة المتابعة المدرسية</h1>
-              <p class="text-sm font-bold text-amber-300 mt-1.5">إعداد ${s.teacherName}</p>
+              <p class="text-xs font-extrabold text-white/95 mt-1">${s.schoolName}</p>
+              <p class="text-sm font-bold text-amber-300 mt-1">إعداد ${s.teacherName}</p>
               <p class="text-xs text-brand-100 mt-0.5 font-semibold">${s.teacherTitle || 'معلم أول أ برمجة وذكاء اصطناعي'}</p>
             </div>
 
-            <form onsubmit="handleLogin(event)" class="p-6 sm:p-7 space-y-5">
+            <form onsubmit="handleLogin(event)" class="p-6 sm:p-7 space-y-4">
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="text-xs sm:text-sm font-bold text-slate-700">المدرسة</label>
+                  <button type="button" onclick="openRegisterSchoolModal()"
+                    class="text-[11px] font-extrabold text-brand-700 hover:text-brand-900 underline flex items-center gap-1">
+                    <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                    <span>فتح مدرسة جديدة</span>
+                  </button>
+                </div>
+                <select id="login-school-select" onchange="handleLoginSchoolSelect(this.value)"
+                  class="w-full px-3.5 py-2.5 bg-brand-50/70 border border-brand-200 rounded-2xl text-xs sm:text-sm font-extrabold text-brand-950 focus:outline-none focus:ring-2 focus:ring-brand-600">
+                  ${schoolsList.map(sc => `
+                    <option value="${sc.id}" ${sc.id === selectedSchool.id ? 'selected' : ''}>
+                      ${sc.settings.schoolName} (${sc.settings.administration})
+                    </option>
+                  `).join('')}
+                </select>
+              </div>
+
               <div>
                 <label class="block text-sm font-bold text-slate-700 mb-1.5">اسم المستخدم / كود الطالب</label>
                 <div class="relative">
@@ -1830,55 +2328,64 @@
 
     function handleLogin(e) {
       e.preventDefault();
+      const selectEl = document.getElementById('login-school-select');
+      if (selectEl) {
+        uiState.loginSelectedSchoolId = selectEl.value;
+      }
       const username = document.getElementById('login-username').value.trim();
       const password = document.getElementById('login-password').value.trim();
       authenticate(username, password);
     }
 
     function authenticate(username, password) {
-      const s = appData.settings;
-      if (username === s.teacherUsername && password === s.teacherPassword) {
-        uiState.currentUser = { role: 'teacher', isSuperAdmin: true };
+      const selectedSchool = getSchoolRecord(uiState.loginSelectedSchoolId);
+      const schId = selectedSchool.id;
+      setActiveSchoolContext(schId);
+
+      if (username === selectedSchool.adminUsername && password === selectedSchool.adminPassword) {
+        const schoolClasses = getCurrentSchoolClasses();
+        uiState.currentUser = { role: 'teacher', isSuperAdmin: true, schoolId: schId };
         uiState.teacherTab = 'students';
         uiState.printCardsMode = false;
-        if (appData.classes.length > 0) {
-          uiState.selectedGradeLevel = appData.classes[0].gradeLevel || 'الصف الأول الثانوي';
-          uiState.selectedClassId = appData.classes[0].id;
+        if (schoolClasses.length > 0) {
+          uiState.selectedGradeLevel = schoolClasses[0].gradeLevel || 'الصف الأول الثانوي';
+          uiState.selectedClassId = schoolClasses[0].id;
         }
-        showToast(`مرحباً بك يا ${s.teacherName} (الحساب الرئيسي)`, 'success');
+        showToast(`مرحباً بك يا ${selectedSchool.settings.teacherName} (أدمن ${selectedSchool.settings.schoolName})`, 'success');
         renderApp();
         return;
       }
 
-      const subTeacher = (appData.subTeachers || []).find(t => t.username === username && t.password === password);
+      const subTeacher = getCurrentSchoolSubTeachers().find(t => t.username === username && t.password === password);
       if (subTeacher) {
-        const allowedClasses = appData.classes.filter(c => (subTeacher.classIds || []).includes(c.id));
+        const schoolClasses = getCurrentSchoolClasses();
+        const allowedClasses = schoolClasses.filter(c => (subTeacher.classIds || []).includes(c.id));
         if (allowedClasses.length === 0) {
-          showToast('لم يتم تخصيص فصول لحسابك بعد، يرجى التواصل مع مدير المنصة.', 'warning');
+          showToast('لم يتم تخصيص فصول لحسابك بعد، يرجى التواصل مع أدمن المدرسة.', 'warning');
           return;
         }
-        uiState.currentUser = { role: 'teacher', isSuperAdmin: false, subTeacherId: subTeacher.id };
+        uiState.currentUser = { role: 'teacher', isSuperAdmin: false, subTeacherId: subTeacher.id, schoolId: schId };
         uiState.teacherTab = 'students';
         uiState.printCardsMode = false;
         uiState.selectedGradeLevel = allowedClasses[0].gradeLevel || 'الصف الأول الثانوي';
         uiState.selectedClassId = allowedClasses[0].id;
-        showToast(`مرحباً بك يا ${subTeacher.name}`, 'success');
+        showToast(`مرحباً بك يا ${subTeacher.name} (${selectedSchool.settings.schoolName})`, 'success');
         renderApp();
         return;
       }
 
-      const student = appData.students.find(st => st.username === username && st.password === password);
+      const student = getCurrentSchoolStudents().find(st => st.username === username && st.password === password);
       if (student) {
-        uiState.currentUser = { role: 'student', studentId: student.id };
+        uiState.currentUser = { role: 'student', studentId: student.id, schoolId: schId };
         uiState.studentViewMode = 'content';
         uiState.studentTab = 'classwork';
         uiState.studentDate = TODAY;
-        showToast(`أهلاً بك يا ${student.name}`, 'success');
+        showToast(`أهلاً بك يا ${student.name} في ${selectedSchool.settings.schoolName}`, 'success');
         renderApp();
         return;
       }
 
-      showToast('اسم المستخدم أو كلمة المرور غير صحيحة!', 'error');
+      showToast('اسم المستخدم أو كلمة المرور غير صحيحة لهذه المدرسة!', 'error');
     }
 
     function logout() {
@@ -1891,228 +2398,146 @@
      * 6. بوابة الطالب (Student View)
      *************************************************************************/
     function renderStudentPortal() {
-      const student = appData.students.find(s => s.id === uiState.currentUser.studentId);
+      const schoolStudents = getCurrentSchoolStudents();
+      const student = schoolStudents.find(s => s.id === uiState.currentUser.studentId);
       if (!student) {
         logout();
         return '';
       }
-      const settings = appData.settings;
-      const studentClass = appData.classes.find(c => c.id === student.classId) || { name: '1/1', fullName: 'فصل 1/1' };
+      const settings = getCurrentSchoolSettings();
+      const schoolClasses = getCurrentSchoolClasses();
+      const studentClass = schoolClasses.find(c => c.id === student.classId) || schoolClasses[0] || { name: '1/1', fullName: 'فصل 1/1' };
 
-      const classContents = appData.contents.filter(c => c.classId === student.classId);
-      const datesWithContent = [...new Set(classContents.map(c => c.date))].sort().reverse();
-      if (!datesWithContent.includes(TODAY)) datesWithContent.unshift(TODAY);
-
-      const filteredItems = classContents.filter(
-        c => c.type === uiState.studentTab && c.date === uiState.studentDate
-      );
-
-      const countByTab = {
-        classwork: classContents.filter(c => c.type === 'classwork' && c.date === uiState.studentDate).length,
-        homework: classContents.filter(c => c.type === 'homework' && c.date === uiState.studentDate).length,
-        quiz: classContents.filter(c => c.type === 'quiz' && c.date === uiState.studentDate).length
-      };
-
+      const classContents = getCurrentSchoolContents().filter(c => c.classId === student.classId);
+      const dayItems = classContents.filter(c => c.date === uiState.studentDate && c.type === uiState.studentTab);
       const termSummary = calculateStudentTermSummary(student.id);
       const attStats = getStudentAttendanceStats(student.id, student.classId);
 
-      return `
-        <div class="min-h-screen bg-slate-100 flex flex-col items-center pb-24">
-          <div class="w-full max-w-2xl bg-white min-h-screen shadow-lg border-x border-slate-200 flex flex-col">
-            <header class="bg-gradient-to-l from-brand-900 to-brand-700 text-white p-5 rounded-b-3xl shadow-md">
-              <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-brand-100 border-b border-white/15 pb-2.5 mb-3">
-                <span class="font-bold flex items-center gap-1">
-                  <i data-lucide="landmark" class="w-3.5 h-3.5 text-amber-300"></i>
-                  <span>${settings.directorate} • ${settings.administration}</span>
-                </span>
-                <span class="font-bold flex items-center gap-1">
-                  <i data-lucide="book-marked" class="w-3.5 h-3.5 text-amber-300"></i>
-                  <span>${settings.subjectName} — ${settings.teacherName}</span>
-                </span>
-              </div>
+      const recentDates = Array.from(new Set([
+        TODAY,
+        YESTERDAY,
+        ...classContents.map(c => c.date)
+      ])).sort((a, b) => b.localeCompare(a)).slice(0, 7);
 
-              <div class="flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                  <div class="w-12 h-12 rounded-2xl bg-white/15 border border-white/20 flex items-center justify-center font-extrabold text-lg shrink-0">
-                    ${student.name.charAt(0)}
+      const activeTabMeta = getTypeLabel(uiState.studentTab);
+
+      return `
+        <div class="min-h-screen bg-slate-50 pb-24">
+          <div class="max-w-2xl mx-auto min-h-screen bg-white shadow-sm border-x border-slate-100 flex flex-col">
+            <header class="bg-brand-800 text-white px-4 py-4 sticky top-0 z-20 shadow-sm">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <div class="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center shrink-0">
+                    <i data-lucide="user-check" class="w-5 h-5 text-amber-300"></i>
                   </div>
-                  <div>
-                    <h1 class="font-bold text-base sm:text-lg leading-tight">${student.name}</h1>
-                    <p class="text-xs text-brand-100 mt-1 flex flex-wrap items-center gap-1.5">
-                      <span class="bg-white/20 px-2.5 py-0.5 rounded-full font-semibold">${studentClass.fullName}</span>
-                      <span>• كود: ${student.username}</span>
-                    </p>
+                  <div class="min-w-0">
+                    <div class="font-extrabold text-sm sm:text-base truncate">${student.name}</div>
+                    <div class="text-[11px] text-brand-100 truncate">${settings.schoolName} • ${studentClass.fullName}</div>
                   </div>
                 </div>
-
-                <button onclick="logout()" title="تسجيل الخروج"
-                  class="px-3.5 py-2.5 bg-rose-500/90 hover:bg-rose-600 text-white rounded-2xl transition flex items-center gap-1.5 text-xs font-bold shrink-0">
-                  <i data-lucide="log-out" class="w-4 h-4"></i>
+                <button type="button" onclick="logout()"
+                  class="px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 text-xs font-bold flex items-center gap-1 shrink-0 transition">
+                  <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
                   <span>خروج</span>
                 </button>
               </div>
 
-              <div class="grid grid-cols-2 gap-2 mt-4 bg-black/20 p-1.5 rounded-2xl">
-                <button onclick="uiState.studentViewMode='content'; renderApp();"
-                  class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 ${
-                    uiState.studentViewMode === 'content'
-                      ? 'bg-white text-brand-900 shadow-sm'
-                      : 'text-brand-100 hover:bg-white/10'
+              <div class="grid grid-cols-2 gap-2 mt-3 bg-brand-950/40 p-1 rounded-2xl">
+                <button type="button" onclick="uiState.studentViewMode='content'; renderApp();"
+                  class="py-2 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 ${
+                    uiState.studentViewMode === 'content' ? 'bg-white text-brand-900 shadow-xs' : 'text-brand-100 hover:bg-white/10'
                   }">
                   <i data-lucide="book-open" class="w-4 h-4"></i>
-                  <span>المحتوى الدراسي اليومي</span>
+                  <span>الدروس والواجبات</span>
                 </button>
-                <button onclick="uiState.studentViewMode='grades'; renderApp();"
-                  class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 ${
-                    uiState.studentViewMode === 'grades'
-                      ? 'bg-emerald-500 text-white shadow-sm'
-                      : 'text-brand-100 hover:bg-white/10'
+                <button type="button" onclick="uiState.studentViewMode='grades'; renderApp();"
+                  class="py-2 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 ${
+                    uiState.studentViewMode === 'grades' ? 'bg-white text-brand-900 shadow-xs' : 'text-brand-100 hover:bg-white/10'
                   }">
                   <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-                  <span>سجل درجاتي وحضوري</span>
+                  <span>درجاتي وحضوري</span>
                 </button>
               </div>
             </header>
 
             ${uiState.studentViewMode === 'content' ? `
-              <section class="px-4 pt-4">
-                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
-                  <div class="flex items-center justify-between gap-2 mb-2.5">
-                    <label for="student-date-picker" class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                      <i data-lucide="calendar" class="w-4 h-4 text-brand-700"></i>
-                      <span>اختر التاريخ لعرض المحتوى:</span>
-                    </label>
-                    <input id="student-date-picker" type="date" value="${uiState.studentDate}"
-                      onchange="changeStudentDate(this.value)"
-                      class="text-xs font-bold text-brand-800 bg-white border border-brand-200 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-600" />
+              <main class="p-4 space-y-4 flex-1">
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-xs font-extrabold text-slate-700">${formatArabicDate(uiState.studentDate)}</span>
+                    <input type="date" value="${uiState.studentDate}" onchange="changeStudentDate(this.value)"
+                      class="px-2.5 py-1 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-brand-800" />
                   </div>
+                  <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                    ${recentDates.map(dt => `
+                      <button type="button" onclick="changeStudentDate('${dt}')"
+                        class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold border transition ${
+                          uiState.studentDate === dt
+                            ? 'bg-brand-700 text-white border-brand-700'
+                            : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                        }">
+                        ${dt === TODAY ? 'اليوم' : (dt === YESTERDAY ? 'أمس' : dt)}
+                      </button>
+                    `).join('')}
+                  </div>
+                </div>
 
-                  <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-                    ${datesWithContent.map(d => {
-                      const isSelected = d === uiState.studentDate;
-                      const hasItems = classContents.some(c => c.date === d);
+                <div class="grid grid-cols-3 gap-2 bg-slate-100 p-1 rounded-2xl">
+                  ${[
+                    { id: 'classwork', label: 'الأداء الصفي' },
+                    { id: 'homework', label: 'الواجب المنزلي' },
+                    { id: 'quiz', label: 'التقييم الأسبوعي' }
+                  ].map(tb => `
+                    <button type="button" onclick="changeStudentTab('${tb.id}')"
+                      class="py-2 rounded-xl text-xs font-extrabold transition ${
+                        uiState.studentTab === tb.id ? 'bg-white text-brand-800 shadow-xs' : 'text-slate-600'
+                      }">
+                      ${tb.label}
+                    </button>
+                  `).join('')}
+                </div>
+
+                ${dayItems.length === 0 ? `
+                  <div class="p-8 text-center border border-dashed border-slate-300 rounded-3xl bg-slate-50/60 space-y-1.5">
+                    <i data-lucide="inbox" class="w-8 h-8 text-slate-400 mx-auto"></i>
+                    <div class="text-sm font-extrabold text-slate-700">لا يوجد «${activeTabMeta.label}» منشور في هذا التاريخ</div>
+                    <p class="text-xs text-slate-500">جرّب اختيار يوم آخر من الشريط بالأعلى أو التقويم.</p>
+                  </div>
+                ` : `
+                  <div class="space-y-3">
+                    ${dayItems.map(item => {
+                      const meta = getTypeLabel(item.type);
                       return `
-                        <button onclick="changeStudentDate('${d}')"
-                          class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
-                            isSelected
-                              ? 'bg-brand-700 text-white border-brand-700 shadow-xs'
-                              : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
-                          }">
-                          ${hasItems ? `<span class="w-2 h-2 rounded-full ${isSelected ? 'bg-amber-300' : 'bg-emerald-500'}"></span>` : ''}
-                          <span>${d === TODAY ? 'اليوم' : d === YESTERDAY ? 'أمس' : d}</span>
-                        </button>
+                        <div class="p-4 rounded-3xl border border-slate-200 bg-white shadow-2xs space-y-2.5">
+                          <div class="flex items-center justify-between gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${meta.badge}">${meta.label}</span>
+                            <span class="text-[11px] font-bold text-slate-400">${item.createdAt || item.date}</span>
+                          </div>
+                          <h3 class="font-extrabold text-slate-900 text-sm sm:text-base">${item.title}</h3>
+                          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line">${item.description}</p>
+                          ${(item.attachmentName || item.attachmentUrl || item.attachmentPreview) ? `
+                            <button type="button" onclick="previewAttachment('${item.id}')"
+                              class="w-full py-2.5 px-3 rounded-2xl bg-brand-50 hover:bg-brand-100 border border-brand-200 text-brand-800 text-xs font-extrabold flex items-center justify-center gap-2 transition">
+                              <i data-lucide="paperclip" class="w-4 h-4"></i>
+                              <span>عرض وتحميل المرفق (${item.attachmentName || 'ملف مرفق'})</span>
+                            </button>
+                          ` : ''}
+                        </div>
                       `;
                     }).join('')}
                   </div>
-                </div>
-              </section>
-
-              <section class="px-4 pt-3">
-                <div class="grid grid-cols-3 gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200/70">
-                  ${[
-                    { id: 'classwork', label: 'الأداء الصفي', icon: 'book-open' },
-                    { id: 'homework', label: 'الواجب المنزلي', icon: 'pen-tool' },
-                    { id: 'quiz', label: 'التقييم الأسبوعي', icon: 'award' }
-                  ].map(tab => {
-                    const active = uiState.studentTab === tab.id;
-                    const count = countByTab[tab.id];
-                    return `
-                      <button onclick="changeStudentTab('${tab.id}')"
-                        class="py-2.5 px-2 rounded-xl text-xs sm:text-sm font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1.5 relative ${
-                          active
-                            ? 'bg-white text-brand-800 shadow-sm border border-slate-200/60'
-                            : 'text-slate-600 hover:text-slate-900'
-                        }">
-                        <i data-lucide="${tab.icon}" class="w-4 h-4 ${active ? 'text-brand-700' : 'text-slate-500'}"></i>
-                        <span>${tab.label}</span>
-                        ${count > 0 ? `
-                          <span class="w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-extrabold ${
-                            active ? 'bg-brand-700 text-white' : 'bg-slate-300 text-slate-700'
-                          }">${count}</span>
-                        ` : ''}
-                      </button>
-                    `;
-                  }).join('')}
-                </div>
-              </section>
-
-              <main class="px-4 pt-4 flex-1 space-y-3">
-                <div class="flex items-center justify-between text-xs text-slate-500 px-1">
-                  <span class="font-bold text-slate-800">${getTypeLabel(uiState.studentTab).label}</span>
-                  <span>${formatArabicDate(uiState.studentDate)}</span>
-                </div>
-
-                ${filteredItems.length === 0 ? `
-                  <div class="bg-slate-50 rounded-3xl border border-dashed border-slate-300 p-8 text-center my-4">
-                    <div class="w-14 h-14 bg-white text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-slate-200">
-                      <i data-lucide="folder-open" class="w-7 h-7"></i>
-                    </div>
-                    <h3 class="font-bold text-slate-700 text-base">لا يوجد محتوى مرفوع لهذا التاريخ</h3>
-                    <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto leading-relaxed">
-                      لم يقم ${settings.teacherName} برفع بيانات في تبويب "${getTypeLabel(uiState.studentTab).label}" بتاريخ ${uiState.studentDate}. اختر تاريخاً آخر مميزاً بنقطة خضراء.
-                    </p>
-                  </div>
-                ` : filteredItems.map(item => {
-                  const meta = getTypeLabel(item.type);
-                  return `
-                    <article class="bg-white rounded-3xl p-5 shadow-xs border border-slate-200 space-y-3">
-                      <div class="flex items-start justify-between gap-2">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${meta.badge}">
-                          <i data-lucide="${meta.icon}" class="w-3.5 h-3.5"></i>
-                          ${meta.label}
-                        </span>
-                        <span class="text-[11px] text-slate-400 font-semibold flex items-center gap-1">
-                          <i data-lucide="clock" class="w-3 h-3"></i>
-                          ${item.createdAt || 'تم الرفع'}
-                        </span>
-                      </div>
-
-                      <h2 class="text-base sm:text-lg font-extrabold text-slate-900 leading-snug">
-                        ${item.title}
-                      </h2>
-
-                      <p class="text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
-                        ${item.description}
-                      </p>
-
-                      ${(item.attachmentName || item.attachmentUrl) ? `
-                        <div class="pt-1">
-                          <div class="flex items-center justify-between p-3 rounded-2xl bg-brand-50/70 border border-brand-100">
-                            <div class="flex items-center gap-2.5 overflow-hidden">
-                              <div class="w-10 h-10 rounded-xl bg-brand-700 text-white flex items-center justify-center shrink-0">
-                                <i data-lucide="${item.attachmentType === 'image' ? 'image' : 'file-text'}" class="w-5 h-5"></i>
-                              </div>
-                              <div class="truncate">
-                                <div class="text-xs font-bold text-slate-800 truncate">${item.attachmentName || 'مرفق دراسي'}</div>
-                                <div class="text-[11px] text-brand-700 font-semibold">مرفق من ${settings.teacherName}</div>
-                              </div>
-                            </div>
-                            <button onclick="previewAttachment('${item.id}')"
-                              class="px-3.5 py-2 bg-brand-700 hover:bg-brand-800 text-white text-xs font-bold rounded-xl shrink-0 transition flex items-center gap-1">
-                              <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-                              <span>عرض / تحميل</span>
-                            </button>
-                          </div>
-                        </div>
-                      ` : ''}
-                    </article>
-                  `;
-                }).join('')}
+                `}
               </main>
             ` : `
-              <main class="px-4 pt-5 flex-1 space-y-5">
-                <div class="bg-gradient-to-l from-brand-900 to-brand-800 text-white rounded-3xl p-5 shadow-md space-y-4">
-                  <div class="flex items-center justify-between border-b border-white/15 pb-3">
-                    <div>
-                      <div class="text-xs text-brand-200 font-bold">متوسط الفصل الدراسي الأول</div>
-                      <div class="text-sm font-extrabold mt-0.5">مادة ${settings.subjectName}</div>
-                    </div>
-                    <div class="text-2xl font-extrabold text-amber-300">
-                      ${termSummary.totalFinal} <span class="text-xs font-normal text-white">/ 40</span>
-                    </div>
+              <main class="p-4 space-y-4 flex-1">
+                <div class="bg-gradient-to-br from-brand-900 to-brand-700 text-white rounded-3xl p-4 space-y-3 shadow-sm">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-brand-100">متوسط الفصل الدراسي الأول (1 - 18)</span>
+                    <span class="text-xs font-extrabold bg-white/15 px-3 py-1 rounded-full">
+                      المجموع: ${termSummary.hasAnyGrade ? termSummary.totalFinal : '-'} / 40
+                    </span>
                   </div>
-
-                  <div class="grid grid-cols-3 gap-2.5 text-center">
+                  <div class="grid grid-cols-3 gap-2 text-center">
                     <div class="bg-white/10 border border-white/15 rounded-2xl p-3">
                       <div class="text-[11px] text-brand-100 font-bold">متوسط التقييم</div>
                       <div class="text-lg font-extrabold mt-1">${termSummary.quizAvg} <span class="text-xs font-normal">/ 15</span></div>
@@ -2389,7 +2814,7 @@
     }
 
     function renderTeacherPortal() {
-      const s = appData.settings;
+      const s = getCurrentSchoolSettings();
       const superAdmin = isSuperAdmin();
       const profile = getActiveTeacherProfile();
       const accessibleClasses = getAccessibleClasses();
@@ -2623,7 +3048,7 @@
                     class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:bg-white" />
                 </div>
                 <div>
-                  <label class="block text-xs font-extrabold text-slate-700 mb-1.5">الصف الدراسي الافتراضي</label>
+                  <label class="block text-xs font-extrabold text-slate-700 mb-1.5">الصف الدراسي الأساسي</label>
                   <select id="basic-grade"
                     class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs sm:text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-600 focus:bg-white">
                     ${GRADE_LEVELS.map(gl => `<option value="${gl}" ${s.gradeLevel === gl ? 'selected' : ''}>${gl}</option>`).join('')}
@@ -2723,19 +3148,15 @@
       const teacherTitle = document.getElementById('basic-teacher-title').value.trim();
       const whatsappNumber = document.getElementById('basic-whatsapp').value.trim();
       const subjectName = document.getElementById('basic-subject').value.trim();
-      const gradeLevel = document.getElementById('basic-grade').value.trim();
+      const gradeLevel = document.getElementById('basic-grade').value;
       const principalName = document.getElementById('basic-principal').value.trim();
       const academicYear = document.getElementById('basic-year').value.trim();
       const studyStartDate = document.getElementById('basic-start-date').value;
       const teacherUsername = document.getElementById('basic-username').value.trim();
       const teacherPassword = document.getElementById('basic-password').value.trim();
 
-      if (appData.students.some(st => st.username === teacherUsername) || (appData.subTeachers || []).some(t => t.username === teacherUsername)) {
-        showToast('اسم مستخدم المعلم يتعارض مع مستخدم آخر مسجل!', 'error');
-        return;
-      }
-
-      appData.settings = {
+      const currentSchId = getCurrentSchoolId();
+      const updatedSettings = {
         ...appData.settings,
         directorate,
         administration,
@@ -2752,8 +3173,20 @@
         teacherPassword
       };
 
+      appData.settings = updatedSettings;
+      appData.schools = (appData.schools || []).map(sc =>
+        sc.id === currentSchId
+          ? {
+              ...sc,
+              adminUsername: teacherUsername,
+              adminPassword: teacherPassword,
+              settings: updatedSettings
+            }
+          : sc
+      );
+
       saveState();
-      showToast('تم حفظ البيانات الأساسية وتطبيقها في جميع الكشوف والصفحات!', 'success');
+      showToast(`تم حفظ بيانات وترويسة (${schoolName}) وتطبيقها في جميع الكشوف!`, 'success');
       renderApp();
     }
 
@@ -2887,10 +3320,11 @@
         return;
       }
 
+      const schSettings = getCurrentSchoolSettings();
       if (
-        username === appData.settings.teacherUsername ||
-        (appData.subTeachers || []).some(t => t.username === username) ||
-        appData.students.some(s => s.username === username)
+        username === schSettings.teacherUsername ||
+        getCurrentSchoolSubTeachers().some(t => t.username === username) ||
+        getCurrentSchoolStudents().some(s => s.username === username)
       ) {
         showToast('اسم المستخدم مستخدم بالفعل، اختر اسماً آخر', 'error');
         return;
@@ -2899,6 +3333,7 @@
       appData.subTeachers = appData.subTeachers || [];
       appData.subTeachers.push({
         id: 'subt_' + Date.now(),
+        schoolId: getCurrentSchoolId(),
         name,
         subjectName,
         username,
@@ -3078,9 +3513,11 @@
         uiState.selectedClassId = displayedClasses[0].id;
       }
 
-      const currentClass = accessibleClasses.find(c => c.id === uiState.selectedClassId) || accessibleClasses[0] || appData.classes[0];
+      const schoolClasses = getCurrentSchoolClasses();
+      const schoolStudents = getCurrentSchoolStudents();
+      const currentClass = accessibleClasses.find(c => c.id === uiState.selectedClassId) || accessibleClasses[0] || schoolClasses[0] || appData.classes[0];
       const classStudents = sortStudentsAlphabetically(
-        appData.students.filter(s => s.classId === currentClass.id)
+        schoolStudents.filter(s => s.classId === currentClass.id)
       );
       const suggestedCode = generateNextStudentCode(currentClass.id);
       const bulkPreviewRows =
@@ -3088,7 +3525,7 @@
           ? parseBulkStudentsInput(uiState.bulkRawText, currentClass.id, uiState.bulkPassMode)
           : [];
       const validBulkCount = bulkPreviewRows.filter(r => r.status === 'valid').length;
-      const s = appData.settings;
+      const s = getCurrentSchoolSettings();
       const profile = getActiveTeacherProfile();
 
       if (uiState.printCardsMode) {
@@ -3456,6 +3893,7 @@
       const newId = 'c_' + Date.now();
       appData.classes.push({
         id: newId,
+        schoolId: getCurrentSchoolId(),
         name: shortName,
         fullName,
         gradeLevel: uiState.selectedGradeLevel || 'الصف الأول الثانوي'
@@ -3487,13 +3925,15 @@
       const username = document.getElementById('new-student-user').value.trim();
       const password = document.getElementById('new-student-pass').value.trim();
 
-      if (appData.students.some(s => s.username === username) || username === appData.settings.teacherUsername) {
-        showToast('اسم المستخدم هذا مستخدم بالفعل، اختر كوداً آخر.', 'error');
+      const schSettings = getCurrentSchoolSettings();
+      if (getCurrentSchoolStudents().some(s => s.username === username) || username === schSettings.teacherUsername) {
+        showToast('اسم المستخدم هذا مستخدم بالفعل داخل المدرسة، اختر كوداً آخر.', 'error');
         return;
       }
 
       appData.students.push({
         id: 's_' + Date.now(),
+        schoolId: getCurrentSchoolId(),
         username,
         password,
         name,
@@ -3610,9 +4050,11 @@
         return;
       }
 
+      const schId = getCurrentSchoolId();
       validRows.forEach((row, idx) => {
         appData.students.push({
           id: `s_${Date.now()}_${idx}`,
+          schoolId: schId,
           username: row.username,
           password: row.password,
           name: row.name,
@@ -3768,9 +4210,10 @@
      * رفع المحتوى اليومي
      * ----------------------------------------------------------------------- */
     function renderTeacherUploadTab() {
-      const currentClass = appData.classes.find(c => c.id === uiState.selectedClassId) || appData.classes[0];
-      const classContents = appData.contents
-        .filter(c => c.classId === uiState.selectedClassId)
+      const schoolClasses = getCurrentSchoolClasses();
+      const currentClass = schoolClasses.find(c => c.id === uiState.selectedClassId) || schoolClasses[0] || appData.classes[0];
+      const classContents = getCurrentSchoolContents()
+        .filter(c => c.classId === currentClass.id)
         .sort((a, b) => b.date.localeCompare(a.date));
 
       return `
@@ -3927,6 +4370,7 @@
 
       const newContent = {
         id: 'cnt_' + Date.now(),
+        schoolId: getCurrentSchoolId(),
         classId: uiState.selectedClassId,
         type: uiState.uploadType,
         date: date,
@@ -3958,7 +4402,7 @@
      * ----------------------------------------------------------------------- */
     function renderTeacherAttendanceTab() {
       const classStudents = sortStudentsAlphabetically(
-        appData.students.filter(s => s.classId === uiState.selectedClassId)
+        getCurrentSchoolStudents().filter(s => s.classId === uiState.selectedClassId)
       );
       const attKey = `${uiState.selectedClassId}_${uiState.attendanceDate}`;
       const dayRecords = appData.attendance[attKey] || {};
@@ -4110,11 +4554,12 @@
 
     function openWeeklyAttendancePrintModal() {
       const activeAttSheet = ATTENDANCE_SHEETS_CONFIG.find(a => a.id === uiState.selectedAttSheetId) || ATTENDANCE_SHEETS_CONFIG[0];
-      const s = appData.settings;
+      const s = getCurrentSchoolSettings();
       const profile = getActiveTeacherProfile();
-      const currentClass = appData.classes.find(c => c.id === uiState.selectedClassId) || appData.classes[0];
+      const schoolClasses = getCurrentSchoolClasses();
+      const currentClass = schoolClasses.find(c => c.id === uiState.selectedClassId) || schoolClasses[0] || appData.classes[0];
       const classStudents = sortStudentsAlphabetically(
-        appData.students.filter(st => st.classId === uiState.selectedClassId)
+        getCurrentSchoolStudents().filter(st => st.classId === currentClass.id)
       );
 
       const weeksData = activeAttSheet.weeks.map(wNum => ({
@@ -4250,11 +4695,12 @@
      * الكشوف الأربعة الرسمية بالطول (Portrait A4)
      * ----------------------------------------------------------------------- */
     function renderOfficialRangeSheet(weekNumbers, rangeTitle, includeTermAvgAndExams) {
-      const s = appData.settings;
+      const s = getCurrentSchoolSettings();
       const profile = getActiveTeacherProfile();
-      const currentClass = appData.classes.find(c => c.id === uiState.selectedClassId) || appData.classes[0];
+      const schoolClasses = getCurrentSchoolClasses();
+      const currentClass = schoolClasses.find(c => c.id === uiState.selectedClassId) || schoolClasses[0] || appData.classes[0];
       const classStudents = sortStudentsAlphabetically(
-        appData.students.filter(st => st.classId === uiState.selectedClassId)
+        getCurrentSchoolStudents().filter(st => st.classId === currentClass.id)
       );
 
       const targetWeeks = weekNumbers.map(w => ({
@@ -4294,10 +4740,15 @@
                 <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
                 <span>تصدير Excel (CSV)</span>
               </button>
-              <button type="button" onclick="openDirectPrintPreview([${weekNumbers.join(',')}], '${rangeTitle.replace(/'/g, "\\'")}', ${includeTermAvgAndExams})"
+              <button type="button" onclick="triggerDirectSheetCanvasPrint([${weekNumbers.join(',')}], '${rangeTitle.replace(/'/g, "\\'")}', ${includeTermAvgAndExams})"
                 class="px-4 py-2 bg-brand-700 hover:bg-brand-800 text-white text-xs font-extrabold rounded-xl flex items-center gap-1.5 shadow-sm transition">
                 <i data-lucide="printer" class="w-4 h-4"></i>
-                <span>طباعة السجل (A4 Portrait)</span>
+                <span>طباعة السجل (ورقة A4 واحدة)</span>
+              </button>
+              <button type="button" onclick="openDirectPrintPreview([${weekNumbers.join(',')}], '${rangeTitle.replace(/'/g, "\\'")}', ${includeTermAvgAndExams})"
+                class="px-3 py-2 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-sm transition">
+                <i data-lucide="eye" class="w-4 h-4"></i>
+                <span>معاينة</span>
               </button>
             </div>
           </div>
@@ -4421,62 +4872,61 @@
                         const qTok = parseGradeToken(rec.quiz);
                         const hTok = parseGradeToken(rec.hw);
                         const bTok = parseGradeToken(rec.behavior);
-                        const hasAny = qTok.type !== 'empty' || hTok.type !== 'empty' || bTok.type !== 'empty';
-                        const weekSum = Number((qTok.num + hTok.num + bTok.num).toFixed(2));
+                        const weekSumDisplay = formatSheetTotalDisplay(qTok, hTok, bTok);
 
                         return `
                           <td class="border-l border-slate-300 p-0 ${wIdx > 0 ? 'week-sep border-r-[2.5px] border-r-slate-950' : ''}">
                             <input type="text" value="${qTok.display}" placeholder="" title="أدخل الدرجة أو صفر أو غ"
                               onchange="updateOfficialSheetGrade('${student.id}', ${w.num}, 'quiz', this.value, 15, this)"
-                              class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-slate-300 focus:border-brand-600 focus:bg-brand-50/40 focus:outline-none font-extrabold ${qTok.type === 'absent' ? 'text-rose-600' : 'text-slate-950'}" />
+                              class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-slate-300 focus:border-brand-600 focus:bg-brand-50/40 focus:outline-none font-extrabold ${qTok.type === 'absent' ? 'text-rose-600' : 'text-blue-700'}" />
                           </td>
                           <td class="border-l border-slate-300 p-0">
                             <input type="text" value="${hTok.display}" placeholder="" title="أدخل الدرجة أو صفر أو غ"
                               onchange="updateOfficialSheetGrade('${student.id}', ${w.num}, 'hw', this.value, 15, this)"
-                              class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-slate-300 focus:border-emerald-600 focus:bg-emerald-50/40 focus:outline-none font-extrabold ${hTok.type === 'absent' ? 'text-rose-600' : 'text-slate-950'}" />
+                              class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-slate-300 focus:border-emerald-600 focus:bg-emerald-50/40 focus:outline-none font-extrabold ${hTok.type === 'absent' ? 'text-rose-600' : 'text-blue-700'}" />
                           </td>
                           <td class="border-l border-slate-300 p-0">
                             <input type="text" value="${bTok.display}" placeholder="" title="أدخل الدرجة أو صفر أو غ"
                               onchange="updateOfficialSheetGrade('${student.id}', ${w.num}, 'behavior', this.value, 10, this)"
-                              class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-slate-300 focus:border-amber-500 focus:bg-amber-50/40 focus:outline-none font-extrabold ${bTok.type === 'absent' ? 'text-rose-600' : 'text-slate-950'}" />
+                              class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-slate-300 focus:border-amber-500 focus:bg-amber-50/40 focus:outline-none font-extrabold ${bTok.type === 'absent' ? 'text-rose-600' : 'text-blue-700'}" />
                           </td>
                           <td id="sheet-total-${student.id}-${w.num}"
-                            class="py-0.5 px-0.5 font-black text-slate-950 bg-slate-100/90">
-                            ${hasAny ? weekSum : '-'}
+                            class="py-0.5 px-0.5 text-[11px] font-black text-red-600 bg-sky-100/90">
+                            ${weekSumDisplay}
                           </td>
                         `;
                       }).join('')}
 
                       ${includeTermAvgAndExams && summary ? `
                         <td id="term-avg-quiz-${student.id}"
-                          class="week-sep border-r-[3px] border-r-slate-950 border-l border-slate-300 py-0.5 px-0.5 font-extrabold text-emerald-950 bg-emerald-50/50">
+                          class="week-sep border-r-[3px] border-r-slate-950 border-l border-slate-300 py-0.5 px-0.5 font-extrabold text-blue-700 bg-blue-50/40">
                           ${summary.quizCount > 0 ? summary.quizAvg : '-'}
                         </td>
                         <td id="term-avg-hw-${student.id}"
-                          class="border-l border-slate-300 py-0.5 px-0.5 font-extrabold text-emerald-950 bg-emerald-50/50">
+                          class="border-l border-slate-300 py-0.5 px-0.5 font-extrabold text-blue-700 bg-blue-50/40">
                           ${summary.hwCount > 0 ? summary.hwAvg : '-'}
                         </td>
                         <td id="term-avg-beh-${student.id}"
-                          class="border-l border-slate-300 py-0.5 px-0.5 font-extrabold text-emerald-950 bg-emerald-50/50">
+                          class="border-l border-slate-300 py-0.5 px-0.5 font-extrabold text-blue-700 bg-blue-50/40">
                           ${summary.behCount > 0 ? summary.behAvg : '-'}
                         </td>
                         <td id="term-avg-total-${student.id}"
-                          class="py-0.5 px-0.5 font-black text-emerald-950 bg-emerald-200/70">
+                          class="py-0.5 px-0.5 text-[11px] font-black text-red-600 bg-sky-100/90">
                           ${summary.hasAnyGrade ? summary.totalFinal : '-'}
                         </td>
 
                         <td class="week-sep border-r-[3px] border-r-slate-950 border-l border-slate-300 p-0 bg-amber-50/30">
                           <input type="text" value="${octInputVal}" placeholder="" title="أدخل الدرجة أو صفر أو غ"
                             onchange="updateMonthlyExam('${student.id}', 'oct', this.value, this)"
-                            class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-amber-400 focus:border-amber-600 focus:bg-amber-100/50 focus:outline-none font-extrabold ${octInputVal === 'غ' ? 'text-rose-600' : 'text-slate-950'}" />
+                            class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-amber-400 focus:border-amber-600 focus:bg-amber-100/50 focus:outline-none font-extrabold ${octInputVal === 'غ' ? 'text-rose-600' : 'text-blue-700'}" />
                         </td>
                         <td class="border-l border-slate-300 p-0 bg-amber-50/30">
                           <input type="text" value="${novInputVal}" placeholder="" title="أدخل الدرجة أو صفر أو غ"
                             onchange="updateMonthlyExam('${student.id}', 'nov', this.value, this)"
-                            class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-amber-400 focus:border-amber-600 focus:bg-amber-100/50 focus:outline-none font-extrabold ${novInputVal === 'غ' ? 'text-rose-600' : 'text-slate-950'}" />
+                            class="w-7 sm:w-8 text-center py-0.5 border border-transparent hover:border-amber-400 focus:border-amber-600 focus:bg-amber-100/50 focus:outline-none font-extrabold ${novInputVal === 'غ' ? 'text-rose-600' : 'text-blue-700'}" />
                         </td>
                         <td id="exams-total-${student.id}"
-                          class="py-0.5 px-0.5 font-black text-amber-950 bg-amber-200/70">
+                          class="py-0.5 px-0.5 text-[11px] font-black text-red-600 bg-sky-100/90">
                           ${summary.hasAnyExam ? summary.examsTotal : '-'}
                         </td>
                       ` : ''}
@@ -4509,7 +4959,7 @@
       if (tok.type === 'empty') {
         appData.grades[key][field] = null;
         inputEl.classList.remove('text-rose-600');
-        inputEl.classList.add('text-slate-900');
+        inputEl.classList.add('text-blue-700');
         saveState();
         refreshSheetRowCalculations(studentId, week);
         return;
@@ -4525,7 +4975,7 @@
       if (tok.type === 'absent') {
         appData.grades[key][field] = 'غ';
         inputEl.value = 'غ';
-        inputEl.classList.remove('text-slate-900');
+        inputEl.classList.remove('text-blue-700');
         inputEl.classList.add('text-rose-600');
         saveState();
         refreshSheetRowCalculations(studentId, week);
@@ -4551,7 +5001,7 @@
       appData.grades[key][field] = storedVal;
       inputEl.value = storedVal;
       inputEl.classList.remove('text-rose-600');
-      inputEl.classList.add('text-slate-900');
+      inputEl.classList.add('text-blue-700');
       saveState();
       refreshSheetRowCalculations(studentId, week);
     }
@@ -4565,7 +5015,7 @@
       if (tok.type === 'empty') {
         appData.monthlyExams[studentId][examKey] = null;
         inputEl.classList.remove('text-rose-600');
-        inputEl.classList.add('text-slate-900');
+        inputEl.classList.add('text-blue-700');
         saveState();
         refreshMonthlyExamTotalDOM(studentId);
         return;
@@ -4581,7 +5031,7 @@
       if (tok.type === 'absent') {
         appData.monthlyExams[studentId][examKey] = 'غ';
         inputEl.value = 'غ';
-        inputEl.classList.remove('text-slate-900');
+        inputEl.classList.remove('text-blue-700');
         inputEl.classList.add('text-rose-600');
         saveState();
         refreshMonthlyExamTotalDOM(studentId);
@@ -4600,7 +5050,7 @@
       appData.monthlyExams[studentId][examKey] = storedVal;
       inputEl.value = storedVal;
       inputEl.classList.remove('text-rose-600');
-      inputEl.classList.add('text-slate-900');
+      inputEl.classList.add('text-blue-700');
       saveState();
       refreshMonthlyExamTotalDOM(studentId);
     }
@@ -4612,9 +5062,7 @@
         const qTok = parseGradeToken(rec.quiz);
         const hTok = parseGradeToken(rec.hw);
         const bTok = parseGradeToken(rec.behavior);
-        const hasAny = qTok.type !== 'empty' || hTok.type !== 'empty' || bTok.type !== 'empty';
-        const sum = Number((qTok.num + hTok.num + bTok.num).toFixed(2));
-        weekCell.textContent = hasAny ? sum : '-';
+        weekCell.textContent = formatSheetTotalDisplay(qTok, hTok, bTok);
       }
 
       const avgQuizEl = document.getElementById(`term-avg-quiz-${studentId}`);
@@ -4646,11 +5094,12 @@
     }
 
     function exportOfficialSheetCSV(weekNumbers, includeTermAvgAndExams) {
-      const s = appData.settings;
+      const s = getCurrentSchoolSettings();
       const profile = getActiveTeacherProfile();
-      const currentClass = appData.classes.find(c => c.id === uiState.selectedClassId) || appData.classes[0];
+      const schoolClasses = getCurrentSchoolClasses();
+      const currentClass = schoolClasses.find(c => c.id === uiState.selectedClassId) || schoolClasses[0] || appData.classes[0];
       const classStudents = sortStudentsAlphabetically(
-        appData.students.filter(st => st.classId === uiState.selectedClassId)
+        getCurrentSchoolStudents().filter(st => st.classId === currentClass.id)
       );
 
       const weekGroupCells = weekNumbers.map(w => {
@@ -4674,10 +5123,10 @@
         <th style="background:#ecfdf5;border:1px solid #0f172a;padding:5px;">متوسط التقييم (15)</th>
         <th style="background:#ecfdf5;border:1px solid #0f172a;padding:5px;">متوسط الواجب (15)</th>
         <th style="background:#ecfdf5;border:1px solid #0f172a;padding:5px;">متوسط السلوك (10)</th>
-        <th style="background:#a7f3d0;border:1.5px solid #0f172a;padding:5px;">المجموع (40)</th>
+        <th style="background:#e0f2fe;border:1.5px solid #0f172a;padding:5px;">المجموع (40)</th>
         <th style="background:#fffbeb;border:1px solid #0f172a;padding:5px;">اختبار أكتوبر (15)</th>
         <th style="background:#fffbeb;border:1px solid #0f172a;padding:5px;">اختبار نوفمبر (15)</th>
-        <th style="background:#fde68a;border:1.5px solid #0f172a;padding:5px;">مجموع الاختبارين (30)</th>
+        <th style="background:#e0f2fe;border:1.5px solid #0f172a;padding:5px;">مجموع الاختبارين (30)</th>
       ` : '';
 
       const bodyRows = classStudents.map((st, idx) => {
@@ -4686,13 +5135,12 @@
           const qTok = parseGradeToken(rec.quiz);
           const hTok = parseGradeToken(rec.hw);
           const bTok = parseGradeToken(rec.behavior);
-          const hasAny = qTok.type !== 'empty' || hTok.type !== 'empty' || bTok.type !== 'empty';
-          const sum = hasAny ? Number((qTok.num + hTok.num + bTok.num).toFixed(2)) : '';
+          const sumDisplay = formatSheetTotalDisplay(qTok, hTok, bTok);
           return `
             <td style="border:1px solid #0f172a;text-align:center;padding:5px;">${qTok.display}</td>
             <td style="border:1px solid #0f172a;text-align:center;padding:5px;">${hTok.display}</td>
             <td style="border:1px solid #0f172a;text-align:center;padding:5px;">${bTok.display}</td>
-            <td style="border:1.5px solid #0f172a;text-align:center;padding:5px;background:#f8fafc;font-weight:bold;">${sum}</td>
+            <td style="border:1.5px solid #0f172a;text-align:center;padding:5px;background:#e0f2fe;font-weight:bold;">${sumDisplay === '-' ? '' : sumDisplay}</td>
           `;
         }).join('');
 
@@ -4703,10 +5151,10 @@
             <td style="border:1px solid #0f172a;text-align:center;padding:5px;background:#ecfdf5;">${sum.quizCount > 0 ? sum.quizAvg : ''}</td>
             <td style="border:1px solid #0f172a;text-align:center;padding:5px;background:#ecfdf5;">${sum.hwCount > 0 ? sum.hwAvg : ''}</td>
             <td style="border:1px solid #0f172a;text-align:center;padding:5px;background:#ecfdf5;">${sum.behCount > 0 ? sum.behAvg : ''}</td>
-            <td style="border:1.5px solid #0f172a;text-align:center;padding:5px;background:#a7f3d0;font-weight:bold;">${sum.hasAnyGrade ? sum.totalFinal : ''}</td>
+            <td style="border:1.5px solid #0f172a;text-align:center;padding:5px;background:#e0f2fe;font-weight:bold;">${sum.hasAnyGrade ? sum.totalFinal : ''}</td>
             <td style="border:1px solid #0f172a;text-align:center;padding:5px;background:#fffbeb;">${sum.octVal !== null ? sum.octVal : ''}</td>
             <td style="border:1px solid #0f172a;text-align:center;padding:5px;background:#fffbeb;">${sum.novVal !== null ? sum.novVal : ''}</td>
-            <td style="border:1.5px solid #0f172a;text-align:center;padding:5px;background:#fde68a;font-weight:bold;">${sum.hasAnyExam ? sum.examsTotal : ''}</td>
+            <td style="border:1.5px solid #0f172a;text-align:center;padding:5px;background:#e0f2fe;font-weight:bold;">${sum.hasAnyExam ? sum.examsTotal : ''}</td>
           `;
         }
 
